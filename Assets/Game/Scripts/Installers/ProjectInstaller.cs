@@ -1,3 +1,4 @@
+using Game.Scripts.Signal;
 using UnityEngine;
 using Zenject;
 
@@ -19,6 +20,13 @@ public class ProjectInstaller : MonoInstaller {
     public void SignalRegistry() {
         SignalBusInstaller.Install(Container);
 
+        Container.DeclareSignal<SignalBuyNewElemetn>().OptionalSubscriber();
         Container.DeclareSignal<SignalUpdateLevel>().OptionalSubscriber();
+        Container.DeclareSignal<SignalMoneyUpdate>().OptionalSubscriber();
+        Container.DeclareSignal<SignalResetGame>().OptionalSubscriber();
+        Container.DeclareSignal<SignalStartGame>().OptionalSubscriber();
+        Container.DeclareSignal<SignalLooseGame>().OptionalSubscriber();
+        Container.DeclareSignal<SignalStopGame>().OptionalSubscriber();
+        Container.DeclareSignal<SignalNoMoney>().OptionalSubscriber();
     }
 }

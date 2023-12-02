@@ -5,15 +5,12 @@ using Zenject;
 
 public class GameStarter : MonoBehaviour {
     private List<ILoadableElement> _loadableElements = new();
-    private UIService _uIService;
 
     [Inject]
     private void Construct(
-    UIService uIService,
     List<ILoadableElement> loadableElements
     ) {
         _loadableElements = loadableElements;
-        _uIService = uIService;
     }
 
     private void Start() {

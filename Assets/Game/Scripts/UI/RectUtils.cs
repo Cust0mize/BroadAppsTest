@@ -62,4 +62,10 @@ public static class RectUtils {
         var oldPosition = GetLocalPosition(transform);
         UpdateLocalPosition(transform, oldPosition + (Vector3)position);
     }
+
+    public static void SetRectSizeInGrid(GridLayoutGroup gridLayoutGroup, RectTransform rectTransform, int elementCount) {
+        int constraint = (int)rectTransform.rect.width / (int)gridLayoutGroup.cellSize.x;
+        float newSize = (gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y) * Mathf.CeilToInt(elementCount / (float)constraint);
+        rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newSize);
+    }
 }

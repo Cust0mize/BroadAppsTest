@@ -1,7 +1,8 @@
+using Game.Scripts.Signal;
 using UnityEngine.UI;
 using UnityEngine;
-using TMPro;
 using Zenject;
+using TMPro;
 
 namespace Game.Scripts.UI.Panels {
     public class MainScreenPanel : UIPanel, ILoadableElement {
@@ -22,6 +23,7 @@ namespace Game.Scripts.UI.Panels {
         private void Construct(SignalBus signalBus) {
             signalBus.Subscribe<SignalUpdateLevel>(UpdateBar);
             signalBus.Subscribe<SignalUpdateLevel>(UpdateLevel);
+            signalBus.Subscribe<SignalMoneyUpdate>(BalanceUpdate);
         }
 
         public void Load() {
@@ -37,6 +39,10 @@ namespace Game.Scripts.UI.Panels {
             _levelBar.UpdateBar(signalUpdateLevel.NewStartValue, signalUpdateLevel.NewEndValue, signalUpdateLevel.NewLevelProgressValue);
         }
 
+        private void BalanceUpdate(SignalMoneyUpdate signalMoneyUpdate) {
+            _balanceValueTextUI.text = signalMoneyUpdate.NewMoneyValue.ToString();
+        }
+
         private void SubscribeButtons() {
             _customizationButton.RemoveAllAndSubscribeButton(CustomizationClick);
             _achievementsButton.RemoveAllAndSubscribeButton(AchievementsClick);
@@ -50,7 +56,7 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void CustomizationClick() {
-
+            UIService.OpenPanel<CustomizationPanel>();
         }
 
         private void StartGameClick() {

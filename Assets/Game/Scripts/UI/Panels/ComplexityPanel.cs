@@ -1,6 +1,6 @@
-﻿using System;
+﻿using UnityEngine.UI;
 using UnityEngine;
-using UnityEngine.UI;
+using System;
 
 namespace Game.Scripts.UI.Panels {
     public class ComplexityPanel : UIPanel {
@@ -9,7 +9,7 @@ namespace Game.Scripts.UI.Panels {
         private event Action _updateSelection;
 
         private void Start() {
-            _startGameButton.RemoveAllAndSubscribeButton(() => UIService.OpenPanel<GamePanel>());
+            _startGameButton.RemoveAllAndSubscribeButton(StartGameClick);
             _updateSelection += StartUpdateSelection;
             _complexities = transform.GetComponentsInChildren<ComplexityButton>();
             for (int i = 0; i < _complexities.Length; i++) {
@@ -25,6 +25,11 @@ namespace Game.Scripts.UI.Panels {
 
         private void OnDestroy() {
             _updateSelection -= StartUpdateSelection;
+        }
+
+        private void StartGameClick() {
+            UIService.HidePanelBypassStack<ComplexityPanel>();
+            UIService.OpenPanel<GamePanel>();
         }
     }
 

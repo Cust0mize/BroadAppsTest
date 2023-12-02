@@ -4,14 +4,11 @@ using UnityEngine;
 using Zenject;
 
 public class UIService : MonoBehaviour, ILoadableElement {
-    private readonly Dictionary<string, UIElement> _elements = new Dictionary<string, UIElement>();
-    private readonly Dictionary<string, UIPanel> _panels = new Dictionary<string, UIPanel>();
-    private readonly List<UIPanel> _stack = new List<UIPanel>();
+    private readonly Dictionary<string, UIElement> _elements = new();
+    private readonly Dictionary<string, UIPanel> _panels = new();
+    private readonly List<UIPanel> _stack = new();
 
     public int Order => 0;
-
-    public delegate void OnPanelPopDelegate(UIPanel panel);
-    public event OnPanelPopDelegate OnPanelPop;
 
     [Inject]
     public void Construct() {
@@ -53,20 +50,11 @@ public class UIService : MonoBehaviour, ILoadableElement {
     }
 
     public void OpenPanel<T>() where T : UIPanel {
-        //ClearStack();
-        PushPanel<T>();
-    }
-
-    public void PushPanel<T>() where T : UIPanel {
         if (_stack.Count > 0) {
             if (_stack[_stack.Count - 1].GetType() == typeof(T)) {
                 return;
             }
         }
-
-        //foreach (var panelItem in _stack) {
-        //    panelItem.Hide();
-        //}
 
         var panel = _panels[typeof(T).Name];
         _stack.Add(panel);
@@ -74,13 +62,17 @@ public class UIService : MonoBehaviour, ILoadableElement {
         panel.Show();
     }
 
-    public void PopPanel() {
-        if (_stack.Count > 0) {
+    public void HideAllPanels(List<UIPanel> ignoreElement) {
+        int counter = _stack.Count;
+        while (counter > 0) {
             var panel = _stack[^1];
+            if (ignoreElement.Contains(panel)) {
+                counter--;
+                continue;
+            }
             _stack.Remove(panel);
             panel.Hide();
-
-            OnPanelPop?.Invoke(panel);
+            counter--;
         }
     }
 
@@ -90,10 +82,6 @@ public class UIService : MonoBehaviour, ILoadableElement {
 
     public bool IsAnyPanelOpened() {
         return _stack.Count > 0;
-    }
-
-    public void PopAllPanels() {
-        ClearStack();
     }
 
     public void ShowUIElements() {
@@ -109,14 +97,6 @@ public class UIService : MonoBehaviour, ILoadableElement {
             if (element.Value.IHidenElement) {
                 element.Value.Hide();
             }
-        }
-    }
-
-    private void ClearStack() {
-        while (_stack.Count > 0) {
-            var panel = _stack[^1];
-            _stack.Remove(panel);
-            panel.Hide();
         }
     }
 }
