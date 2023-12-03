@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Game.Scripts.Signal;
 using UnityEngine.UI;
 using UnityEngine;
@@ -10,12 +9,10 @@ using TMPro;
 
 namespace Game.Scripts.UI.Panels {
     public class GamePanel : UIPanel {
-        [SerializeField] private TextMeshProUGUI _balanceTextUI;
         [SerializeField] private TextMeshProUGUI _waitingTextUI;
         [SerializeField] private TextMeshProUGUI _levelTextUI;
         [SerializeField] private Image _waitingImageFill;
         [SerializeField] private Image _barRoot;
-        [SerializeField] Button _exitButton;
         private GameButton[] _gameButtons;
         private bool _startAwait;
 
@@ -29,16 +26,10 @@ namespace Game.Scripts.UI.Panels {
             _signalBus = signalBus;
             signalBus.Subscribe<SignalLooseGame>(LooseGame);
             signalBus.Subscribe<SignalUpdateLevel>(UpdateLevelNumber);
-            signalBus.Subscribe<SignalMoneyUpdate>(UpdateBalanceValue);
         }
 
         public void UpdateLevelNumber(SignalUpdateLevel signalUpdateLevel) {
             _levelTextUI.text = $"{signalUpdateLevel.NewLevelIndex + 1} Level";
-        }
-
-        public void UpdateBalanceValue(SignalMoneyUpdate signalMoneyUpdate) {
-            string result = $"${signalMoneyUpdate.NewMoneyValue:f2}";
-            _balanceTextUI.text = result;
         }
 
         private void Start() {
@@ -54,13 +45,6 @@ namespace Game.Scripts.UI.Panels {
                 var eve = SubscribeGameButton(_gameButtons[i]);
                 _gameButtons[i].Init(eve);
             }
-
-            _exitButton.RemoveAllAndSubscribeButton(ReturnToMainMenu);
-        }
-
-        private void ReturnToMainMenu() {
-            UIService.HideAllPanels(new List<UIPanel> { UIService.GetPanel<MainScreenPanel>() });
-            UIService.OpenPanel<MainScreenPanel>();
         }
 
         private Action SubscribeGameButton(GameButton gameButton) {
@@ -125,26 +109,5 @@ namespace Game.Scripts.UI.Panels {
             _barRoot.gameObject.SetActive(state);
             _waitingTextUI.gameObject.SetActive(state);
         }
-    }
-
-    public class CustomizationController : MonoBehaviour {
-        [SerializeField] private Image _playerImage;
-        [SerializeField] private Image _bacgroundImage;
-
-        public CustomizationController() {
-
-        }
-
-        private void UpdatePlayerImage() {
-
-        }
-
-        private void UpdateBackgroundImage() {
-
-        }
-    }
-
-    public class ShopController : MonoBehaviour {
-
     }
 }

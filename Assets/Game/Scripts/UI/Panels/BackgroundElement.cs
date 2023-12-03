@@ -8,11 +8,11 @@ namespace Game.Scripts.UI.Panels {
         [SerializeField] private TextMeshProUGUI _priceTextUI;
         [SerializeField] private Button _buyButton;
         [SerializeField] private Image _iconImage;
-        private BackgroundPanel _backgroundPanel;
+        private ShopListPanel _backgroundPanel;
         private BackgroundItem _item;
         public bool IsBuy { get; private set; }
 
-        public void Init(BackgroundItem backgroundItem, BackgroundPanel backgroundPanel, bool isBuy) {
+        public void Init(BackgroundItem backgroundItem, ShopListPanel backgroundPanel, bool isBuy) {
             _backgroundPanel = backgroundPanel;
             _item = backgroundItem;
             _iconImage.sprite = _item.Icon;

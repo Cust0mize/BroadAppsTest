@@ -1,6 +1,7 @@
 ﻿using Game.Scripts.UI.Panels;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 [Serializable]
 public class GameData {
@@ -52,11 +53,11 @@ public class GameData {
         }
     }
 
-    private List<int> _buyBackgroundsIndex = new();
-    public List<int> BuyBackgroundsIndex {
-        get { return _buyBackgroundsIndex; }
+    private Dictionary<ShopListType, List<int>> _buyShopItems = new();
+    public Dictionary<ShopListType, List<int>> BuyShopItems {
+        get { return _buyShopItems; }
         set {
-            _buyBackgroundsIndex = value;
+            BuyShopItems.AddRange(value);
             Save();
         }
     }
@@ -79,9 +80,9 @@ public class GameData {
         }
         CurrentLevel = gameData.CurrentLevel;
         CurrentMoney = gameData.CurrentMoney;
+        BuyShopItems = gameData.BuyShopItems;
         CurrentGamemode = gameData.CurrentGamemode;
         CurrentComplexity = gameData.CurrentComplexity;
-        BuyBackgroundsIndex = gameData.BuyBackgroundsIndex;
         CurrentLevelProgressValue = gameData.CurrentLevelProgressValue;
     }
 
@@ -91,6 +92,6 @@ public class GameData {
         CurrentGamemode = Gamemode.Classic;
         CurrentComplexity = Complexity.Easy;
         CurrentLevelProgressValue = 0;
-        BuyBackgroundsIndex = new();
+        BuyShopItems = new();
     }
 }

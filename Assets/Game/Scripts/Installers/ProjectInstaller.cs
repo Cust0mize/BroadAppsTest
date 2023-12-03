@@ -20,6 +20,7 @@ public class ProjectInstaller : MonoInstaller {
     public void SignalRegistry() {
         SignalBusInstaller.Install(Container);
 
+        Container.DeclareSignal<SignalSelectAvailableElement>().OptionalSubscriber();
         Container.DeclareSignal<SignalBuyNewElemetn>().OptionalSubscriber();
         Container.DeclareSignal<SignalUpdateLevel>().OptionalSubscriber();
         Container.DeclareSignal<SignalMoneyUpdate>().OptionalSubscriber();

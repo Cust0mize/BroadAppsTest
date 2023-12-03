@@ -28,8 +28,8 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void StartGameClick() {
-            UIService.HidePanelBypassStack<ComplexityPanel>();
             UIService.OpenPanel<GamePanel>();
+            UIService.HidePanelBypassStack<ComplexityPanel>();
         }
     }
 

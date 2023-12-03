@@ -1,4 +1,6 @@
-﻿namespace Game.Scripts.Signal {
+﻿using Game.Scripts.UI.Panels;
+
+namespace Game.Scripts.Signal {
     public struct SignalResetGame {
 
     }
@@ -23,10 +25,20 @@
 
     }
 
+    public struct SignalSelectAvailableElement {
+        public AvailableElement AvailableElement;
+
+        public SignalSelectAvailableElement(AvailableElement availableElement) {
+            AvailableElement = availableElement;
+        }
+    }
+
     public struct SignalBuyNewElemetn {
         public BackgroundItem BackgroundItem;
+        public ShopListType ShopListType;
 
-        public SignalBuyNewElemetn(BackgroundItem backgroundItem) {
+        public SignalBuyNewElemetn(BackgroundItem backgroundItem, ShopListType shopListType) {
+            ShopListType = shopListType;
             BackgroundItem = backgroundItem;
         }
     }

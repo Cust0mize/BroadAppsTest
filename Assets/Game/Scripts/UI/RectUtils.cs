@@ -68,4 +68,8 @@ public static class RectUtils {
         float newSize = (gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y) * Mathf.CeilToInt(elementCount / (float)constraint);
         rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newSize);
     }
+
+    public static void SetHorizontalRectInLayoutGroup(RectTransform targetRect, HorizontalLayoutGroup horizontalLayoutGroup, float oneElementWidnt, int elementCount) {
+        targetRect.sizeDelta = new Vector2((oneElementWidnt + horizontalLayoutGroup.spacing) * elementCount, targetRect.rect.height);
+    }
 }
