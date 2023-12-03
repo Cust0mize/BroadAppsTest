@@ -25,6 +25,7 @@ namespace Game.Scripts.UI.Panels {
         private void ButtonClick() {
             if (_backgroundPanel.TryBuyUpgrade(_item)) {
                 gameObject.SetActive(false);
+                _backgroundPanel.UpdateRectSize();
                 IsBuy = true;
             }
         }

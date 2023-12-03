@@ -52,7 +52,7 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void AchievementsClick() {
-
+            UIService.OpenPanel<AchivmentPanel>();
         }
 
         private void CustomizationClick() {

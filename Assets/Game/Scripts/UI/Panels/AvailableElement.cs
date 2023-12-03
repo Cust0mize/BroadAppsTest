@@ -1,7 +1,7 @@
-﻿using UnityEngine.UI;
+﻿using Game.Scripts.Signal;
+using UnityEngine.UI;
 using UnityEngine;
 using Zenject;
-using Game.Scripts.Signal;
 
 namespace Game.Scripts.UI.Panels {
     [RequireComponent(typeof(Button))]

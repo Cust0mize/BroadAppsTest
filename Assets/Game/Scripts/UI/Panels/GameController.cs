@@ -1,7 +1,6 @@
 ﻿using Game.Scripts.Signal;
 using Game.Scripts.Game;
 using UnityEngine;
-using System.Text;
 using Zenject;
 using TMPro;
 
@@ -20,6 +19,7 @@ namespace Game.Scripts.UI.Panels {
         private float _currentMultiply;
         private float _multiply;
         private float _amount;
+        private float _startTimeGame;
 
         [Inject]
         private void Construct(
@@ -43,6 +43,7 @@ namespace Game.Scripts.UI.Panels {
                 _currentMultiply += Time.deltaTime / 2;
                 _multiplyTextUI.text = $"{_currentMultiply:f2}X";
                 _startTime += Time.deltaTime;
+
                 if (_multiplyAnimationCurve.Evaluate(_startTime) > 1) {
                     _signalBus.Fire<SignalLooseGame>();
                     StopGame(new SignalStopGame(false));
@@ -58,6 +59,7 @@ namespace Game.Scripts.UI.Panels {
             _settingsController.ParceValue(out float multiply, out float amount);
             _multiply = multiply;
             _amount = amount;
+            _startTimeGame = Time.time;
             CreateCurve();
         }
 
@@ -86,7 +88,10 @@ namespace Game.Scripts.UI.Panels {
         public void StopGame(SignalStopGame signalStopGame) {
             if (signalStopGame.IsWin) {
                 if (_currentMultiply > _multiply) {
-                    _currenciesService.AddMoney(_amount * _multiply);
+                    _currenciesService.AddMoney(_amount * _currentMultiply);
+                    float endTime = _startTimeGame - Time.time;
+                    _signalBus.Fire(new SignalUpdateAchivment(AchivmentType.Earn, _amount * _currentMultiply));
+                    _signalBus.Fire(new SignalUpdateAchivment(AchivmentType.Fly, endTime / 60));
                 }
             }
             else {

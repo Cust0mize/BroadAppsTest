@@ -16,6 +16,13 @@ namespace Game.Scripts.UI.Panels {
             SetCurrentValue(currentValue);
         }
 
+        public void UpdateStartValue(int newValue, int targetValue) {
+            if (newValue > targetValue) {
+                newValue = targetValue;
+            }
+            _startValueTextUI.text = newValue.ToString();
+        }
+
         public void SetCurrentValue(int currentValue) {
             int first = _endValue - _startValue;
             int second = currentValue - _startValue;

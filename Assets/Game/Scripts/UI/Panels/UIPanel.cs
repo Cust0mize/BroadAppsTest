@@ -30,7 +30,12 @@ public class UIPanel : MonoBehaviour {
     }
 
     public virtual void Hide() {
-        _windowShowHideAnimation.GetHideSequence(_endAnimType, CanvasGroup, CachedTransform).OnComplete(() => gameObject.SetActive(false));
+        if (_endAnimType == EndAnimType.NoAnim) {
+            gameObject.SetActive(false);
+        }
+        else {
+            _windowShowHideAnimation.GetHideSequence(_endAnimType, CanvasGroup, CachedTransform).OnComplete(() => gameObject.SetActive(false));
+        }
         UIService.ShowUIElements();
     }
 }

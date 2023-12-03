@@ -8,9 +8,10 @@ namespace Game.Scripts.UI.Panels {
         [SerializeField] private Image _bacgroundImage;
         [SerializeField] private Image _playerImage;
 
-
         [Inject]
-        private void Construct(SignalBus signalBus) {
+        private void Construct(
+        SignalBus signalBus
+        ) {
             signalBus.Subscribe<SignalSelectAvailableElement>(UpdateImage);
         }
 

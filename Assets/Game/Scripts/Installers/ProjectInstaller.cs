@@ -21,6 +21,7 @@ public class ProjectInstaller : MonoInstaller {
         SignalBusInstaller.Install(Container);
 
         Container.DeclareSignal<SignalSelectAvailableElement>().OptionalSubscriber();
+        Container.DeclareSignal<SignalUpdateAchivment>().OptionalSubscriber();
         Container.DeclareSignal<SignalBuyNewElemetn>().OptionalSubscriber();
         Container.DeclareSignal<SignalUpdateLevel>().OptionalSubscriber();
         Container.DeclareSignal<SignalMoneyUpdate>().OptionalSubscriber();

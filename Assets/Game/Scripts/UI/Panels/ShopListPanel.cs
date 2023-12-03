@@ -27,12 +27,17 @@ namespace Game.Scripts.UI.Panels {
             _gameData = gameData;
         }
 
+        public override void Show() {
+            base.Show();
+            UIService.GetPanel<AvailablePanel>().LoadBuyElement(this);
+            UIService.OpenPanel<AvailablePanel>();
+        }
+
         public bool TryBuyUpgrade(BackgroundItem backgroundItem) {
             if (_currenciesService.RemoveMoney(backgroundItem.Price)) {
                 _gameData.BuyShopItems[ShopListType].Add(backgroundItem.Order);
                 _gameData.Save();
                 _signalBus.Fire(new SignalBuyNewElemetn(backgroundItem, ShopListType));
-                UpdateRectSize();
                 return true;
             }
             else {
@@ -52,7 +57,13 @@ namespace Game.Scripts.UI.Panels {
 
         public void UpdateRectSize() {
             if (BackgroundItemsSO.Count > 0) {
-                RectUtils.SetRectSizeInGrid(_currentGrid, _gridRectTransform, BackgroundItemsSO.Count);
+                int counter = 0;
+                for (int i = 0; i < _gridRectTransform.childCount; i++) {
+                    if (_gridRectTransform.GetChild(i).gameObject.activeSelf) {
+                        counter++;
+                    }
+                }
+                RectUtils.SetRectSizeInGrid(_currentGrid, _gridRectTransform, counter);
             }
         }
     }

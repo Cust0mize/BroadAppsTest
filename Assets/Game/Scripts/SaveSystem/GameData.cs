@@ -1,7 +1,8 @@
-﻿using Game.Scripts.UI.Panels;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Game.Scripts.UI.Panels;
 using Unity.VisualScripting;
+using System;
+using UnityEngine;
 
 [Serializable]
 public class GameData {
@@ -62,6 +63,42 @@ public class GameData {
         }
     }
 
+    private Dictionary<UpgradeType, int> _upgradeLevels = new();
+    public Dictionary<UpgradeType, int> UpgradeLevels {
+        get { return _upgradeLevels; }
+        set {
+            UpgradeLevels.AddRange(value);
+            Save();
+        }
+    }
+
+    private Dictionary<ShopListType, int> _selectCustomElement = new();
+    public Dictionary<ShopListType, int> SelectCustomElement {
+        get { return _selectCustomElement; }
+        set {
+            _selectCustomElement.AddRange(value);
+            Save();
+        }
+    }    
+    
+    private Dictionary<AchivmentType, float> _achivmentValue = new();
+    public Dictionary<AchivmentType, float> AchivmentValue {
+        get { return _achivmentValue; }
+        set {
+            _achivmentValue.AddRange(value);
+            Save();
+        }
+    }    
+    
+    private Dictionary<AchivmentType, List<float>> _takedReward = new();
+    public Dictionary<AchivmentType, List<float>> TakedReward {
+        get { return _takedReward; }
+        set {
+            _takedReward.AddRange(value);
+            Save();
+        }
+    }
+
     #endregion
 
     public void Init(SaveSystem saveSystem) {
@@ -78,11 +115,15 @@ public class GameData {
         if (gameData == null) {
             return;
         }
+        TakedReward = gameData.TakedReward;
         CurrentLevel = gameData.CurrentLevel;
         CurrentMoney = gameData.CurrentMoney;
         BuyShopItems = gameData.BuyShopItems;
+        UpgradeLevels = gameData.UpgradeLevels;
+        AchivmentValue = gameData.AchivmentValue;
         CurrentGamemode = gameData.CurrentGamemode;
         CurrentComplexity = gameData.CurrentComplexity;
+        SelectCustomElement = gameData.SelectCustomElement;
         CurrentLevelProgressValue = gameData.CurrentLevelProgressValue;
     }
 
@@ -93,5 +134,8 @@ public class GameData {
         CurrentComplexity = Complexity.Easy;
         CurrentLevelProgressValue = 0;
         BuyShopItems = new();
+        UpgradeLevels = new();
+        AchivmentValue = new();
+        SelectCustomElement = new();
     }
 }
