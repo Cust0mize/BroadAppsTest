@@ -8,6 +8,7 @@ public class GameSceneInstaller : MonoInstaller {
 
     public override void InstallBindings() {
         Container.BindInterfacesAndSelfTo<UIService>().FromComponentInHierarchy().AsCached().NonLazy();//В себе ищет панели на сцене, поэтому нужно заново инстансить в каждой сцене, либо вынести логику поиска в метод инита и реинитить в стартере.
+        Container.Bind<GameSettingsController>().FromComponentsInHierarchy().AsSingle();
         Container.Bind<CheatManager>().FromComponentInHierarchy().AsCached().NonLazy();
         Container.BindInterfacesAndSelfTo<CurrenciesService>().AsSingle().NonLazy();
         Container.Bind<ILoadableElement>().FromComponentsInHierarchy().AsSingle();
@@ -16,6 +17,8 @@ public class GameSceneInstaller : MonoInstaller {
         Container.Bind<RecordController>().AsCached().NonLazy();
         Container.Bind<RouteController>().AsCached().NonLazy();
         Container.Bind<EndGameService>().AsCached().NonLazy();
+        Container.Bind<TwoPersonGame>().AsCached().NonLazy();
         Container.Bind<GameService>().AsCached().NonLazy();
+        Container.Bind<ClassicGame>().AsCached().NonLazy();
     }
 }

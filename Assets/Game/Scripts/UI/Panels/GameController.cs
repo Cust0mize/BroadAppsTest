@@ -3,14 +3,13 @@ using Game.Scripts.Signal;
 using Game.Scripts.Game;
 using UnityEngine;
 using Zenject;
+using System;
 using TMPro;
 using Enums;
-using System;
 
 namespace Game.Scripts.UI.Panels {
     public class GameController : MonoBehaviour {
-        [SerializeField] private AnimationCurve _multiplyAnimationCurve;
-        [SerializeField] private GameSettingsController _settingsController;
+        [SerializeField] private AnimationCurve anim;
         [SerializeField] private TextMeshProUGUI _downMultiplyTextUI;
         [SerializeField] private TextMeshProUGUI _endSityCityTextUI;
         [SerializeField] private TextMeshProUGUI _playerNameTextUI;
@@ -22,59 +21,48 @@ namespace Game.Scripts.UI.Panels {
 
         private GameData _gameData;
         private SignalBus _signalBus;
-        private UIService _uIService;
         private GameService _gameService;
+        private ClassicGame _classicGame;
         private RouteController _routeController;
         private CurrenciesService _currenciesService;
+        private TwoPersonGame _twoPersonGame;
+        private BaseGame _baseGame;
         private TwoPersonModeController _twoPersonModeController;
 
-        private float _startTime;
         private float _startDownMultiplyValue;
         private float _downMultiplyValue;
-        private float _currentMultiply;
-        private float _startTimeGame;
-        private float _multiply;
-        private bool _startGame;
-        private float _amount;
-        private float _looseValue = 0.95f;
-
-        private TimeSpan _currentTimeSpan;
-        private int _playerCount;
-        private int _currentPlayerIndex;
-        private TimeSpan _startTimeSpan;
-
-        private float _secondResultValue;
-        private float _firstResultValue;
 
         [Inject]
         private void Construct(
         TwoPersonModeController twoPersonModeController,
         CurrenciesService currenciesService,
         RouteController routeController,
+        TwoPersonGame twoPersonGame,
+        ClassicGame classicGame,
         GameService gameService,
         SignalBus signalBus,
-        UIService uIService,
         GameData gameData
         ) {
             _twoPersonModeController = twoPersonModeController;
+            _twoPersonGame = twoPersonGame;
             _currenciesService = currenciesService;
             _routeController = routeController;
             _gameService = gameService;
+            _classicGame = classicGame;
             _signalBus = signalBus;
-            _uIService = uIService;
             _gameData = gameData;
             signalBus.Subscribe<SignalStartGame>(StartGame);
-            signalBus.Subscribe<SignalStopGame>(StopGame);
             signalBus.Subscribe<OpenGamePanel>(UpdateUI);
+            signalBus.Subscribe<SignalStopGame>(StopGame);
         }
 
         private void Start() {
             SetMultipleTextState(false);
-            _player.UpdatePosition(0);
+            _player.UpdatePosition(0.1f);
         }
 
         private void Update() {
-            if (_startGame) {
+            if (_baseGame != null && _baseGame.IsStartGame) {
                 Game();
             }
         }
@@ -95,23 +83,11 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void TwoPersonGame() {
-            UIUpdate();
-            _currentTimeSpan -= TimeSpan.FromSeconds(Time.deltaTime);
+            _twoPersonGame.GameUpdate();
 
-            if (_multiplyAnimationCurve.Evaluate(_startTime) > _looseValue) {
-                StopGame(new SignalStopGame(false));
-            }
-            if (_currentTimeSpan < TimeSpan.FromSeconds(0)) {
-                StopGame(new SignalStopGame(true));
-            }
-            _downMultiplyTextUI.text = _currentTimeSpan.ToString(@"mm\:ss");
-        }
-
-        private void GoNexPlayer() {
-            if (_currentPlayerIndex != _playerCount) {
-                _currentPlayerIndex++;
-                _currentTimeSpan = _startTimeSpan;
-                _playerNameTextUI.text = $"Player {_currentPlayerIndex}\n{_twoPersonModeController.SecondPersonName}";
+            if (_baseGame.IsStartGame) {
+                UIUpdate();
+                _downMultiplyTextUI.text = _twoPersonGame.CurrentTimeSpan.ToString(@"mm\:ss");
             }
         }
 
@@ -128,121 +104,46 @@ namespace Game.Scripts.UI.Panels {
 
         private void ClassicGame() {
             UIUpdate();
+            _classicGame.GameUpdate();
             TryLose();
         }
 
         private void TryLose() {
-            if (_multiplyAnimationCurve.Evaluate(_startTime) > _looseValue) {
+            if (_baseGame.MultiplyAnimationCurve.Evaluate(_baseGame.StartTime) > _baseGame.LooseValue) {
                 _signalBus.Fire<SignalLooseGame>();
                 StopGame(new SignalStopGame(false));
             }
         }
 
+        private void StopGame(SignalStopGame signalStopGame) {
+            _baseGame.StopGame(signalStopGame);
+            _player.UpdatePosition(0.1f);
+            SetMultipleTextState(false);
+            _playerNameTextUI.text = $"Player {_twoPersonGame.CurrentPlayerIndex}\n{_twoPersonModeController.FirstPersonName}";
+        }
+
         private void UIUpdate() {
-            _player.UpdatePosition(_multiplyAnimationCurve.Evaluate(_startTime));
-            _currentMultiply += Time.deltaTime / 2;
-            _multiplyTextUI.text = $"{_currentMultiply:f2}X";
-            _startTime += Time.deltaTime;
+            _player.UpdatePosition(_baseGame.MultiplyAnimationCurve.Evaluate(_baseGame.StartTime));
+            _multiplyTextUI.text = $"{_baseGame.CurrentMultiply:f2}X";
         }
 
         private void StartGame() {
-            _currentMultiply = 0;
-            _startTime = 0;
-            _startGame = true;
             SetMultipleTextState(true);
-            _settingsController.ParceValue(out float multiply, out float amount);
-            _multiply = multiply;
-            _amount = amount;
-            _startTimeGame = Time.time;
-            _multiplyAnimationCurve = _gameService.GetNewCurve(minValue, maxValue);
-        }
-
-        private void StopGame(SignalStopGame signalStopGame) {
-            if (signalStopGame.IsWin) {
-                float gameTime = _startTimeGame - Time.time;
-                SetWinResult(gameTime);
-            }
-            else {
-                if (_gameData.CurrentGamemode != Gamemode.Two) {
-                    _currenciesService.RemoveMoney(_amount);
-                }
-                else {
-                    _uIService.GetPanel<GamePanel>().UpdateButtonState(GameButtonType.Bid);
-                    if (_currentPlayerIndex == 1) {
-                        _firstResultValue -= _amount;
-                    }
-                    else {
-                        _secondResultValue -= _amount;
-                    }
-                }
-            }
-
-            _startGame = false;
-            _player.UpdatePosition(0.1f);
-            SetMultipleTextState(false);
-        }
-
-        private void SetWinResult(float gameTime) {
-            if (_gameData.CurrentGamemode == Gamemode.Classic) {
-                SetClassicGameResult(gameTime);
-            }
-            else if (_gameData.CurrentGamemode == Gamemode.Trip) {
-                SetTripGameResult(gameTime);
-            }
-            else if (_gameData.CurrentGamemode == Gamemode.Two) {
-                SetTwoGameResult();
-            }
-        }
-
-        private void SetTwoGameResult() {
-            _uIService.GetPanel<GamePanel>().UpdateButtonState(GameButtonType.Bid);
-
-            if (_currentTimeSpan <= TimeSpan.FromSeconds(0) && _currentPlayerIndex == _playerCount) {
-                AddResultValue();
-                int winIndex;
-                if (_secondResultValue > _firstResultValue) {
-                    winIndex = 1;
-                }
-                else {
-                    winIndex = 0;
-                }
-                _signalBus.Fire(new SignalUpdateResultTwoGame(winIndex, new float[] { _firstResultValue, _secondResultValue }, new string[] { _twoPersonModeController.FirstPersonName, _twoPersonModeController.SecondPersonName }));
-                _uIService.OpenPanel<TwoPersonResultPanel>();
-            }
-            else if (_currentTimeSpan <= TimeSpan.FromSeconds(0)) {
-                AddResultValue();
-                GoNexPlayer();
-            }
-            else {
-                AddResultValue();
-            }
+            _baseGame.StartGame();
         }
 
         private void SetTripGameResult(float gameTime) {
-            float rewardValue = 0;
-            if (_currentMultiply > _multiply && _downMultiplyValue <= 0) {
-                rewardValue = _amount * _currentMultiply;
-                _signalBus.Fire(new SignalWinGame(rewardValue, gameTime));
-                _downMultiplyValue = _startDownMultiplyValue;
-            }
-        }
-
-        private void SetClassicGameResult(float gameTime) {
-            float rewardValue = 0;
-            if (_currentMultiply > _multiply) {
-                rewardValue = _amount * _currentMultiply;
-                _signalBus.Fire(new SignalWinGame(rewardValue, gameTime));
-            }
+            //float rewardValue = 0;
+            //if (_currentMultiply > _multiply && _downMultiplyValue <= 0) {
+            //    rewardValue = _amount * _currentMultiply;
+            //    _signalBus.Fire(new SignalWinGame(rewardValue, gameTime));
+            //    _downMultiplyValue = _startDownMultiplyValue;
+            //}
         }
 
         private void AddResultValue() {
-            if (_multiply < _currentMultiply) {
-                if (_currentPlayerIndex == 1) {
-                    _firstResultValue += _amount * _currentMultiply;
-                }
-                else {
-                    _secondResultValue += _amount * _currentMultiply;
-                }
+            if (_twoPersonGame.Multiply < _twoPersonGame.CurrentMultiply) {
+                _twoPersonGame.AddResultValue();
             }
         }
 
@@ -250,6 +151,8 @@ namespace Game.Scripts.UI.Panels {
             switch (_gameData.CurrentGamemode) {
                 case Gamemode.Classic:
                     SetStateUI(Gamemode.Classic);
+                    _classicGame.SetStartValue(new BaseStartGameValue());
+                    _baseGame = _classicGame;
                     break;
                 case Gamemode.Trip:
                     SetStateUI(Gamemode.Trip);
@@ -261,13 +164,9 @@ namespace Game.Scripts.UI.Panels {
                 case Gamemode.Task: break;
                 case Gamemode.Two:
                     SetStateUI(Gamemode.Two);
-                    _startTimeSpan = _twoPersonModeController.TargetGameTime;
-                    _currentTimeSpan = _startTimeSpan;
-                    _playerCount = 2;
-                    _currentPlayerIndex = 1;
-                    _firstResultValue = 0;
-                    _secondResultValue = 0;
-                    _playerNameTextUI.text = $"Player {_currentPlayerIndex}\n{_twoPersonModeController.FirstPersonName}";
+                    _twoPersonGame.SetStartValue(new StartTwoGameValue(_twoPersonModeController.TargetGameTime, 2));
+                    _baseGame = _twoPersonGame;
+                    _playerNameTextUI.text = $"Player {_twoPersonGame.CurrentPlayerIndex}\n{_twoPersonModeController.FirstPersonName}";
                     break;
             }
         }
@@ -282,7 +181,6 @@ namespace Game.Scripts.UI.Panels {
             _downMultiplyTextUI.gameObject.SetActive(
             _gameData.CurrentGamemode == Gamemode.Trip && state ||
             _gameData.CurrentGamemode == Gamemode.Two && state);
-
             _multiplyTextUI.gameObject.SetActive(state);
         }
     }
@@ -372,5 +270,306 @@ namespace Game.Scripts.UI.Panels {
         private void UpdateTimeValue() {
             _maxTimeValue += 1;
         }
+    }
+
+    public class TwoPersonGame : BaseGame {
+        private TwoPersonModeController _twoPersonModeController;
+
+        public TwoPersonGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, GameService gameService, UIService uIService, SignalBus signalBus, TwoPersonModeController twoPersonModeController) : base(gameSettingsController, currenciesService, gameService, uIService, signalBus) {
+            _twoPersonModeController = twoPersonModeController;
+        }
+
+        protected override Gamemode GameMode => Gamemode.Two;
+        public TimeSpan CurrentTimeSpan { get; private set; }
+        public TimeSpan StartTimeSpan { get; private set; }
+        public int PlayerCount { get; private set; }
+        public int CurrentPlayerIndex { get; private set; }
+        public float FirstResultValue { get; private set; }
+        public float SecondResultValue { get; private set; }
+
+        public override void SetStartValue(BaseStartGameValue startGameValue) {
+            base.SetStartValue(startGameValue);
+
+            if (BaseStartGameValue is StartTwoGameValue startTwoGameValue) {
+                CurrentPlayerIndex = startTwoGameValue.CurrentPlayerIndex;
+                SecondResultValue = startTwoGameValue.SecondResultValue;
+                FirstResultValue = startTwoGameValue.FirstResultValue;
+                StartTimeSpan = startTwoGameValue.StartTimeSpan;
+                PlayerCount = startTwoGameValue.PlayerCount;
+                CurrentTimeSpan = StartTimeSpan;
+            }
+        }
+
+        public void GoNexPlayer() {
+            if (CurrentPlayerIndex != PlayerCount) {
+                CurrentPlayerIndex++;
+                CurrentTimeSpan = StartTimeSpan;
+            }
+        }
+
+        public override void GameUpdate() {
+            base.GameUpdate();
+
+            CurrentTimeSpan -= TimeSpan.FromSeconds(Time.deltaTime);
+            float value = MultiplyAnimationCurve.Evaluate(StartTime);
+            if (value > LooseValue) {
+                SignalBus.Fire(new SignalStopGame(false));
+            }
+            if (CurrentTimeSpan < TimeSpan.FromSeconds(0)) {
+                SignalBus.Fire(new SignalStopGame(true));
+            }
+        }
+
+        public void AddResultValue() {
+            if (CurrentPlayerIndex == 1) {
+                FirstResultValue += Amount * CurrentMultiply;
+            }
+            else {
+                SecondResultValue += Amount * CurrentMultiply;
+            }
+        }
+
+        public override void SetResult() {
+            UIService.GetPanel<GamePanel>().UpdateButtonState(GameButtonType.Bid);
+
+            if (CurrentTimeSpan <= TimeSpan.FromSeconds(0) && CurrentPlayerIndex == PlayerCount) {
+                AddResultValue();
+                int winIndex;
+                if (SecondResultValue > FirstResultValue) {
+                    winIndex = 1;
+                }
+                else {
+                    winIndex = 0;
+                }
+                SignalBus.Fire(new SignalUpdateResultTwoGame(winIndex, new float[] { FirstResultValue, SecondResultValue }, new string[] { _twoPersonModeController.FirstPersonName, _twoPersonModeController.SecondPersonName }));
+                UIService.OpenPanel<TwoPersonResultPanel>();
+            }
+            else if (CurrentTimeSpan <= TimeSpan.FromSeconds(0)) {
+                AddResultValue();
+                GoNexPlayer();
+            }
+            else {
+                AddResultValue();
+            }
+        }
+
+        public override void StopGame(SignalStopGame signalStopGame) {
+            if (signalStopGame.IsWin) {
+                float gameTime = StartTimeGame - Time.time;
+                SetResult();
+            }
+            else {
+                if (CurrentPlayerIndex == 1) {
+                    FirstResultValue -= Amount;
+                }
+                else {
+                    SecondResultValue -= Amount;
+                }
+            }
+            base.StopGame(signalStopGame);
+        }
+    }
+
+    public class ClassicGame : BaseGame {
+        public ClassicGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, GameService gameService, UIService uIService, SignalBus signalBus) : base(gameSettingsController, currenciesService, gameService, uIService, signalBus) {
+        }
+
+        protected override Gamemode GameMode => Gamemode.Classic;
+
+        public override void GameUpdate() {
+            base.GameUpdate();
+            if (MultiplyAnimationCurve.Evaluate(StartTime) > LooseValue) {
+                SignalBus.Fire<SignalLooseGame>();
+                SignalBus.Fire(new SignalStopGame(false));
+            }
+        }
+
+        public override void SetResult() {
+            float rewardValue = 0;
+            if (CurrentMultiply > Multiply) {
+                rewardValue = Amount * CurrentMultiply;
+                SignalBus.Fire(new SignalWinGame(rewardValue, EndTime));
+            }
+        }
+
+        public override void StopGame(SignalStopGame signalStopGame) {
+            if (signalStopGame.IsWin) {
+                SetResult();
+            }
+            else {
+                CurrenciesService.RemoveMoney(Amount);
+            }
+            base.StopGame(signalStopGame);
+        }
+    }
+
+    public abstract class BaseGame {
+        protected BaseStartGameValue BaseStartGameValue;
+        protected abstract Gamemode GameMode { get; }
+
+        private GameSettingsController _gameSettingsController;
+        private GameService _gameService;
+
+        protected CurrenciesService CurrenciesService { get; private set; }
+        protected UIService UIService { get; private set; }
+        protected SignalBus SignalBus { get; }
+        public float LooseValue => 0.95f;
+        protected float EndTime => StartTime - Time.time;
+
+        public BaseGame(
+            GameSettingsController gameSettingsController,
+            CurrenciesService currenciesService,
+            GameService gameService,
+            UIService uIService,
+            SignalBus signalBus
+        ) {
+            _gameSettingsController = gameSettingsController;
+            CurrenciesService = currenciesService;
+            _gameService = gameService;
+            UIService = uIService;
+            SignalBus = signalBus;
+        }
+
+        public virtual void SetStartValue(BaseStartGameValue startGameValue) {
+            BaseStartGameValue = startGameValue;
+        }
+
+        public virtual void GameUpdate() {
+            if (IsStartGame) {
+                StartTime += Time.deltaTime;
+                CurrentMultiply += Time.deltaTime / 2;
+            }
+        }
+
+        public abstract void SetResult();
+
+        public AnimationCurve MultiplyAnimationCurve { get; private set; }
+        public float CurrentMultiply { get; private set; }
+        public float StartTimeGame { get; private set; }
+        public bool IsStartGame { get; private set; }
+        public float StartTime { get; private set; }
+        public float Multiply { get; private set; }
+        public float Amount { get; private set; }
+
+        public void StartGame() {
+            CurrentMultiply = 0;
+            StartTime = 0;
+            IsStartGame = true;
+            _gameSettingsController.ParceValue(out float multiply, out float amount);
+            Multiply = multiply;
+            Amount = amount;
+            StartTimeGame = Time.time;
+            MultiplyAnimationCurve = _gameService.GetNewCurve(0.1f, 0.95f);///////////
+        }
+
+        public virtual void StopGame(SignalStopGame signalStopGame) {
+            IsStartGame = false;
+            UIService.GetPanel<GamePanel>().UpdateButtonState(GameButtonType.Bid);
+        }
+    }
+
+    public class TripGame : BaseGame {
+
+        public TripGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, GameService gameService, UIService uIService, SignalBus signalBus) : base(gameSettingsController, currenciesService, gameService, uIService, signalBus) {
+        }
+
+        protected override Gamemode GameMode => Gamemode.Trip;
+
+        public override void SetStartValue(BaseStartGameValue startGameValue) {
+            base.SetStartValue(startGameValue);
+
+            if (BaseStartGameValue is StartTripValue startTripValue) {
+
+            }
+        }
+
+        public override void GameUpdate() {
+            base.GameUpdate();
+
+            CurrentTimeSpan -= TimeSpan.FromSeconds(Time.deltaTime);
+            float value = MultiplyAnimationCurve.Evaluate(StartTime);
+            if (value > LooseValue) {
+                SignalBus.Fire(new SignalStopGame(false));
+            }
+            if (CurrentTimeSpan < TimeSpan.FromSeconds(0)) {
+                SignalBus.Fire(new SignalStopGame(true));
+            }
+        }
+
+        public override void SetResult() {
+            UIService.GetPanel<GamePanel>().UpdateButtonState(GameButtonType.Bid);
+
+            if (CurrentTimeSpan <= TimeSpan.FromSeconds(0) && CurrentPlayerIndex == PlayerCount) {
+                AddResultValue();
+                int winIndex;
+                if (SecondResultValue > FirstResultValue) {
+                    winIndex = 1;
+                }
+                else {
+                    winIndex = 0;
+                }
+                SignalBus.Fire(new SignalUpdateResultTwoGame(winIndex, new float[] { FirstResultValue, SecondResultValue }, new string[] { _twoPersonModeController.FirstPersonName, _twoPersonModeController.SecondPersonName }));
+                UIService.OpenPanel<TwoPersonResultPanel>();
+            }
+            else if (CurrentTimeSpan <= TimeSpan.FromSeconds(0)) {
+                AddResultValue();
+                GoNexPlayer();
+            }
+            else {
+                AddResultValue();
+            }
+        }
+
+        public override void StopGame(SignalStopGame signalStopGame) {
+            if (signalStopGame.IsWin) {
+                float gameTime = StartTimeGame - Time.time;
+                SetResult();
+            }
+            else {
+                if (CurrentPlayerIndex == 1) {
+                    FirstResultValue -= Amount;
+                }
+                else {
+                    SecondResultValue -= Amount;
+                }
+            }
+            base.StopGame(signalStopGame);
+        }
+    }
+
+
+
+
+
+
+
+    public class BaseStartGameValue {
+        public BaseStartGameValue() {
+
+        }
+    }
+
+    public class StartTwoGameValue : BaseStartGameValue {
+        public TimeSpan CurrentTimeSpan { get; private set; }
+        public TimeSpan StartTimeSpan { get; }
+        public int PlayerCount { get; }
+        public int CurrentPlayerIndex { get; private set; }
+        public float FirstResultValue { get; }
+        public float SecondResultValue { get; }
+
+        public StartTwoGameValue(
+            TimeSpan startTimeSpan,
+            int playerCount
+        ) : base() {
+            PlayerCount = playerCount;
+            CurrentPlayerIndex = 1;
+            FirstResultValue = 0;
+            SecondResultValue = 0;
+            StartTimeSpan = startTimeSpan;
+        }
+    }
+
+    public class StartTripValue : BaseStartGameValue {
+
     }
 }
