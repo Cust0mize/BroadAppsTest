@@ -3,6 +3,7 @@ using Game.Scripts.Game;
 using UnityEngine;
 using Zenject;
 using TMPro;
+using Enums;
 
 namespace Game.Scripts.UI.Panels {
     public class GameController : MonoBehaviour {

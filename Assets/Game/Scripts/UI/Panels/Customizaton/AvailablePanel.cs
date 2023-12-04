@@ -5,8 +5,9 @@ using UnityEngine;
 using System.Linq;
 using Zenject;
 using System;
+using Enums;
 
-namespace Game.Scripts.UI.Panels {
+namespace Game.Scripts.UI.Panels.Customization {
     public class AvailablePanel : UIPanel {
         [SerializeField] private HorizontalLayoutGroup _availableContentRect;
         [SerializeField] private AvailableElement _availableElementPrefab;

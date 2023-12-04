@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace Game.Scripts.UI.Panels {
+namespace Game.Scripts.UI.Panels.Customization {
     public class CustomizationPanel : UIPanel, ILoadableElement {
         [SerializeField] private AvailablePanel _availablePanel;
         private BaseReplaceButton[] _replaceButtons;
@@ -55,10 +55,5 @@ namespace Game.Scripts.UI.Panels {
                 }
             }
         }
-    }
-
-    public enum ShopListType {
-        Airplane,
-        Background
     }
 }

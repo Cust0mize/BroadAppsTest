@@ -2,8 +2,9 @@
 using UnityEngine.UI;
 using UnityEngine;
 using Zenject;
+using Enums;
 
-namespace Game.Scripts.UI.Panels {
+namespace Game.Scripts.UI.Panels.Customization {
     [RequireComponent(typeof(Button))]
     public class AvailableElement : MonoBehaviour {
         [SerializeField] private Image _selectionRamkImage;

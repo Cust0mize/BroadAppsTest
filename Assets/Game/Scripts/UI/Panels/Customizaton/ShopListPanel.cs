@@ -4,8 +4,9 @@ using Game.Scripts.Game;
 using UnityEngine.UI;
 using UnityEngine;
 using Zenject;
+using Enums;
 
-namespace Game.Scripts.UI.Panels {
+namespace Game.Scripts.UI.Panels.Customization {
     public abstract class ShopListPanel : UIPanel {
         [field: SerializeField] public List<BackgroundItem> BackgroundItemsSO { get; private set; }
         [SerializeField] private RectTransform _gridRectTransform;

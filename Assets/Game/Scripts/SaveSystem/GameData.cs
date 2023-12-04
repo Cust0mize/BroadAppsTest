@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using Game.Scripts.UI.Panels;
 using Unity.VisualScripting;
 using System;
-using UnityEngine;
+using Enums;
 
 [Serializable]
 public class GameData {

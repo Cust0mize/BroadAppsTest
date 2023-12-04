@@ -4,8 +4,9 @@ using UnityEngine.UI;
 using UnityEngine;
 using Zenject;
 using TMPro;
+using Enums;
 
-namespace Game.Scripts.UI.Panels {
+namespace Game.Scripts.UI.Panels.Achivment {
     public class AchivmentItem : MonoBehaviour {
         [SerializeField] private TextMeshProUGUI _revardValueFaceButtonUI;
         [SerializeField] private TextMeshProUGUI _achivmentNameUI;

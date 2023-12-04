@@ -1,4 +1,6 @@
-﻿using Game.Scripts.UI.Panels;
+﻿using Game.Scripts.UI.Panels.Customization;
+using Game.Scripts.UI.Panels;
+using Enums;
 
 namespace Game.Scripts.Signal {
     public struct SignalResetGame {

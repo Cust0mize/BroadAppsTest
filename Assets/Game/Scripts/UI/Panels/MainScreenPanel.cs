@@ -1,3 +1,5 @@
+using Game.Scripts.UI.Panels.Customization;
+using Game.Scripts.UI.Panels.Achivment;
 using Game.Scripts.Signal;
 using UnityEngine.UI;
 using UnityEngine;

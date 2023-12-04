@@ -1,8 +1,9 @@
-﻿using System;
-using TMPro;
+﻿using UnityEngine.UI;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
+using System;
+using TMPro;
+using Enums;
 
 namespace Game.Scripts.UI.Panels {
     [RequireComponent(typeof(Button))]

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Game.Scripts.UI.Panels {
+﻿namespace Game.Scripts.UI.Panels.Customization {
     public class AirplaneUpgradePanel : UIPanel {
         private UpgradeElement[] _upgradeElements;
 

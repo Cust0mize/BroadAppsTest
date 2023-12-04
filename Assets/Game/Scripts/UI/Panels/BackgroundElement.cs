@@ -1,9 +1,9 @@
-﻿using UnityEngine.UI;
+﻿using Game.Scripts.UI.Panels.Customization;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
 namespace Game.Scripts.UI.Panels {
-
     public class BackgroundElement : MonoBehaviour {
         [SerializeField] private TextMeshProUGUI _priceTextUI;
         [SerializeField] private Button _buyButton;

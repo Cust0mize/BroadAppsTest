@@ -2,8 +2,9 @@
 using UnityEngine.UI;
 using UnityEngine;
 using Zenject;
+using Enums;
 
-namespace Game.Scripts.UI.Panels {
+namespace Game.Scripts.Game {
     public class CustomizationController : MonoBehaviour {
         [SerializeField] private Image _bacgroundImage;
         [SerializeField] private Image _playerImage;

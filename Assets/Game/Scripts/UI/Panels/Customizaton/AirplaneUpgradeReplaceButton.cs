@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Game.Scripts.UI.Panels {
+namespace Game.Scripts.UI.Panels.Customization {
     public class AirplaneUpgradeReplaceButton : BaseReplaceButton {
         public override ReplaceButtonType ReplaceButtonType => ReplaceButtonType.AirplaneUpgrade;
 
@@ -9,12 +9,5 @@ namespace Game.Scripts.UI.Panels {
             UIService.HideAllPanels(new List<UIPanel>() { UIService.GetPanel<CustomizationPanel>() });
             UIService.OpenPanel<AirplaneUpgradePanel>();
         }
-    }
-
-    public enum UpgradeType {
-        Wings,
-        Tail,
-        Frame,
-        GasTank
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Game.Scripts.UI.Panels {
+namespace Game.Scripts.UI.Panels.Customization {
     public class AirplaneReplaceButton : BaseReplaceButton {
         public override ReplaceButtonType ReplaceButtonType => ReplaceButtonType.Airplane;
 

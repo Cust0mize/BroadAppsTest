@@ -33,10 +33,5 @@ namespace Game.Scripts.UI.Panels {
         }
     }
 
-    public enum Complexity {
-        Easy,
-        Average,
-        Hard,
-        Extreme,
-    }
+
 }

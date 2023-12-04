@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Game.Scripts.UI.Panels {
+namespace Game.Scripts.UI.Panels.Customization {
     public class BackgroundReplaceButton : BaseReplaceButton {
         public override ReplaceButtonType ReplaceButtonType { get => ReplaceButtonType.Background; }
 

@@ -1,6 +1,7 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
 using Zenject;
+using Enums;
 
 namespace Game.Scripts.UI.Panels {
     public class ChangeGameModePanel : UIPanel {
@@ -49,13 +50,6 @@ namespace Game.Scripts.UI.Panels {
             UIService.HidePanelBypassStack<ChangeGameModePanel>();
             UIService.OpenPanel<ComplexityPanel>();
         }
-    }
-
-    public enum Gamemode {
-        Classic,
-        Trip,
-        Task,
-        Two,
     }
 }
 

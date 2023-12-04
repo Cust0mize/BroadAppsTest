@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace Game.Scripts.UI.Panels {
+namespace Game.Scripts.UI.Panels.Customization {
     [RequireComponent(typeof(Button))]
     public abstract class BaseReplaceButton : MonoBehaviour {
         protected CustomizationPanel CustomizationPanel { get; private set; }

@@ -3,9 +3,9 @@ using Game.Scripts.Signal;
 using UnityEngine;
 using Zenject;
 using System;
-using System.Linq;
+using Enums;
 
-namespace Game.Scripts.UI.Panels {
+namespace Game.Scripts.UI.Panels.Achivment {
     public class AchivmentPanel : UIPanel, ILoadableElement {
         [SerializeField] private AchivmentConfig[] _achivmentConfigs;
         [SerializeField] private AchivmentItem _achivmentItemPrefab;
@@ -69,5 +69,19 @@ namespace Game.Scripts.UI.Panels {
                 }
             }
         }
+    }
+}
+
+namespace Game.Scripts.UI.Panels.Record {
+    public class MyRecordPanel : UIPanel {
+
+    }
+
+    public class MyRecordElement : MonoBehaviour {
+
+    }
+
+    public class AllGameElement : MonoBehaviour {
+
     }
 }

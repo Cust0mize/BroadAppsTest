@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Enums;
 
 [CreateAssetMenu(fileName = "AchivmentConfig", menuName = "ScriptableObjects/AchivmentConfig", order = 1)]
 public class AchivmentConfig : ScriptableObject {
