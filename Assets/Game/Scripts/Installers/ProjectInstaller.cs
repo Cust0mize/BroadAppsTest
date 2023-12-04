@@ -21,14 +21,22 @@ public class ProjectInstaller : MonoInstaller {
         SignalBusInstaller.Install(Container);
 
         Container.DeclareSignal<SignalSelectAvailableElement>().OptionalSubscriber();
+        Container.DeclareSignal<SignalStartTwoPersonModeGame>().OptionalSubscriber();
+        Container.DeclareSignal<SignalUpdateResultTwoGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalUpdateAchivment>().OptionalSubscriber();
+        Container.DeclareSignal<SignalUpdateAirplane>().OptionalSubscriber();
         Container.DeclareSignal<SignalBuyNewElemetn>().OptionalSubscriber();
         Container.DeclareSignal<SignalUpdateLevel>().OptionalSubscriber();
         Container.DeclareSignal<SignalMoneyUpdate>().OptionalSubscriber();
+        Container.DeclareSignal<SignalSelectRoute>().OptionalSubscriber();
+        Container.DeclareSignal<SignalSaveRecord>().OptionalSubscriber();
         Container.DeclareSignal<SignalResetGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalStartGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalLooseGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalStopGame>().OptionalSubscriber();
+        Container.DeclareSignal<SignalBuyRoute>().OptionalSubscriber();
         Container.DeclareSignal<SignalNoMoney>().OptionalSubscriber();
+        Container.DeclareSignal<OpenGamePanel>().OptionalSubscriber();
+        Container.DeclareSignal<SignalWinGame>().OptionalSubscriber();
     }
 }

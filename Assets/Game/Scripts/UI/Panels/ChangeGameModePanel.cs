@@ -26,30 +26,34 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void ClassicClick() {
-            SelectGamemode(Gamemode.Classic);
+            SelectGamemode<ComplexityPanel>(Gamemode.Classic);
         }
 
         private void TripClick() {
-            SelectGamemode(Gamemode.Trip);
+            SelectGamemode<TripModePanel>(Gamemode.Trip);
         }
 
         private void TaskGameClick() {
-            SelectGamemode(Gamemode.Task);
+            SelectGamemode<TaskModePanel>(Gamemode.Task);
         }
 
         private void TwoGameClick() {
-            SelectGamemode(Gamemode.Two);
+            SelectGamemode<TwoModePanel>(Gamemode.Two);
         }
 
         private void HideClick() {
             UIService.HidePanelBypassStack<ChangeGameModePanel>();
         }
 
-        private void SelectGamemode(Gamemode gamemode) {
+        private void SelectGamemode<T>(Gamemode gamemode) where T : UIPanel {
             _gameData.CurrentGamemode = gamemode;
             UIService.HidePanelBypassStack<ChangeGameModePanel>();
-            UIService.OpenPanel<ComplexityPanel>();
+            UIService.OpenPanel<T>();
         }
+    }
+
+    public class TaskModePanel : UIPanel {
+
     }
 }
 

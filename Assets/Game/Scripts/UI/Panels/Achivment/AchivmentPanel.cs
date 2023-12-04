@@ -4,6 +4,9 @@ using UnityEngine;
 using Zenject;
 using System;
 using Enums;
+using TMPro;
+using System.Runtime.CompilerServices;
+using UnityEditor.Tilemaps;
 
 namespace Game.Scripts.UI.Panels.Achivment {
     public class AchivmentPanel : UIPanel, ILoadableElement {
@@ -69,19 +72,5 @@ namespace Game.Scripts.UI.Panels.Achivment {
                 }
             }
         }
-    }
-}
-
-namespace Game.Scripts.UI.Panels.Record {
-    public class MyRecordPanel : UIPanel {
-
-    }
-
-    public class MyRecordElement : MonoBehaviour {
-
-    }
-
-    public class AllGameElement : MonoBehaviour {
-
     }
 }

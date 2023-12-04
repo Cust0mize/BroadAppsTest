@@ -25,6 +25,7 @@ namespace Game.Scripts.UI.Panels {
         }
 
         public void SetCurrentValue(float currentValue) {
+            currentValue = Mathf.Abs(currentValue);
             float first = _endValue - _startValue;
             float second = currentValue - _startValue;
             float precent = (float)second / first;

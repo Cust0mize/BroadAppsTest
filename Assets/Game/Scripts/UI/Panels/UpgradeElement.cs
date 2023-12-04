@@ -1,4 +1,5 @@
-﻿using Game.Scripts.Game;
+﻿using Game.Scripts.Signal;
+using Game.Scripts.Game;
 using UnityEngine.UI;
 using UnityEngine;
 using Zenject;
@@ -15,14 +16,17 @@ namespace Game.Scripts.UI.Panels {
         private int _currentLevel;
 
         private CurrenciesService _currenciesService;
+        private SignalBus _signalBus;
         private GameData _gameData;
 
         [Inject]
         private void Construct(
         CurrenciesService currenciesService,
+        SignalBus signalBus,
         GameData gameData
         ) {
             _currenciesService = currenciesService;
+            _signalBus = signalBus;
             _gameData = gameData;
         }
 
@@ -70,6 +74,8 @@ namespace Game.Scripts.UI.Panels {
                     else {
                         _buttonText.text = $"Buy: {_upgradeConfig.Prices[_currentLevel]}";
                     }
+                    _gameData.CurrentLevelPlane++;
+                    _signalBus.Fire(new SignalUpdateAirplane());
                 }
             }
         }

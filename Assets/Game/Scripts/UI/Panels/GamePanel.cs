@@ -20,10 +20,15 @@ namespace Game.Scripts.UI.Panels {
         private Action _cashOutClick;
         private Action _cancelClick;
         private SignalBus _signalBus;
+        private GameData _gameData;
 
         [Inject]
-        private void Construct(SignalBus signalBus) {
+        private void Construct(
+            SignalBus signalBus,
+            GameData gameData
+        ) {
             _signalBus = signalBus;
+            _gameData = gameData;
             signalBus.Subscribe<SignalLooseGame>(LooseGame);
             signalBus.Subscribe<SignalUpdateLevel>(UpdateLevelNumber);
         }
@@ -32,8 +37,24 @@ namespace Game.Scripts.UI.Panels {
             _levelTextUI.text = $"{signalUpdateLevel.NewLevelIndex + 1} Level";
         }
 
+        public override void Show() {
+            base.Show();
+            _signalBus.Fire(new OpenGamePanel());
+            _levelTextUI.gameObject.SetActive(_gameData.CurrentGamemode != Enums.Gamemode.Two);
+        }
+
+        public void UpdateButtonState(GameButtonType targetType) {
+            for (int i = 0; i < _gameButtons.Length; i++) {
+                if (_gameButtons[i].ButtonType == targetType) {
+                    _gameButtons[i].gameObject.SetActive(true);
+                }
+                else {
+                    _gameButtons[i].gameObject.SetActive(false);
+                }
+            }
+        }
+
         private void Start() {
-            gameObject.SetActive(false);
             SetStateWaitingInfo(false);
             SubscribeButtons();
             UpdateButtonState(GameButtonType.Bid);
@@ -92,17 +113,6 @@ namespace Game.Scripts.UI.Panels {
 
         private void LooseGame() {
             UpdateButtonState(GameButtonType.Bid);
-        }
-
-        private void UpdateButtonState(GameButtonType targetType) {
-            for (int i = 0; i < _gameButtons.Length; i++) {
-                if (_gameButtons[i].ButtonType == targetType) {
-                    _gameButtons[i].gameObject.SetActive(true);
-                }
-                else {
-                    _gameButtons[i].gameObject.SetActive(false);
-                }
-            }
         }
 
         private void SetStateWaitingInfo(bool state) {

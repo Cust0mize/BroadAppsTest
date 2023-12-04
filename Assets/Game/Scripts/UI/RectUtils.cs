@@ -71,5 +71,9 @@ public static class RectUtils {
 
     public static void SetHorizontalRectInLayoutGroup(RectTransform targetRect, HorizontalLayoutGroup horizontalLayoutGroup, float oneElementWidnt, int elementCount) {
         targetRect.sizeDelta = new Vector2((oneElementWidnt + horizontalLayoutGroup.spacing) * elementCount, targetRect.rect.height);
+    }    
+    
+    public static void SetVerticalRectInLayoutGroup(RectTransform targetRect, VerticalLayoutGroup horizontalLayoutGroup, float oneElementWidnt, int elementCount) {
+        targetRect.sizeDelta = new Vector2((oneElementWidnt + horizontalLayoutGroup.spacing) * elementCount, targetRect.rect.height);
     }
 }

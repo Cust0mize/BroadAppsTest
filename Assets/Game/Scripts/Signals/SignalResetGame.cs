@@ -1,5 +1,5 @@
 ﻿using Game.Scripts.UI.Panels.Customization;
-using Game.Scripts.UI.Panels;
+using System;
 using Enums;
 
 namespace Game.Scripts.Signal {
@@ -15,6 +15,16 @@ namespace Game.Scripts.Signal {
 
     }
 
+    public struct SignalWinGame {
+        public float RewardValue;
+        public float GameTime;
+
+        public SignalWinGame(float rewardValue, float gameTime) {
+            RewardValue = rewardValue;
+            GameTime = gameTime;
+        }
+    }
+
     public struct SignalStopGame {
         public bool IsWin { get; private set; }
 
@@ -27,9 +37,49 @@ namespace Game.Scripts.Signal {
 
     }
 
+    public struct SignalStartTwoPersonModeGame {
+        public TimeSpan GameTime { get; }
+        public string FirstPersonName { get; }
+        public string SecondPersonName { get; }
+
+        public SignalStartTwoPersonModeGame(TimeSpan timeSpan, string text1, string text2) {
+            SecondPersonName = text2;
+            FirstPersonName = text1;
+            GameTime = timeSpan;
+        }
+    }
+
+    public struct SignalUpdateResultTwoGame {
+        public int WinPlayerIndex { get; }
+        public float[] Rewards { get; }
+        public string[] Names { get; }
+
+        public SignalUpdateResultTwoGame(int winPlayerIndex, float[] rewards, string[] names) {
+            WinPlayerIndex = winPlayerIndex;
+            Rewards = rewards;
+            Names = names;
+        }
+    }
+
+    public struct SignalBuyRoute {
+        public RouteConfig RouteConfig;
+
+        public SignalBuyRoute(RouteConfig routeConfig) {
+            RouteConfig = routeConfig;
+        }
+    }
+
+    public struct SignalSelectRoute {
+        public RouteConfig RouteConfig;
+
+        public SignalSelectRoute(RouteConfig routeConfig) {
+            RouteConfig = routeConfig;
+        }
+    }
+
     public struct SignalUpdateAchivment {
-        public AchivmentType AchivmentType { get; private set; }
-        public float Value { get; private set; }
+        public AchivmentType AchivmentType { get; }
+        public float Value { get; }
 
         public SignalUpdateAchivment(AchivmentType achivmentType, float value) {
             AchivmentType = achivmentType;
@@ -45,6 +95,12 @@ namespace Game.Scripts.Signal {
         }
     }
 
+    public struct OpenGamePanel {
+    }
+
+    public struct SignalUpdateAirplane {
+    }
+
     public struct SignalBuyNewElemetn {
         public BackgroundItem BackgroundItem;
         public ShopListType ShopListType;
@@ -52,6 +108,16 @@ namespace Game.Scripts.Signal {
         public SignalBuyNewElemetn(BackgroundItem backgroundItem, ShopListType shopListType) {
             ShopListType = shopListType;
             BackgroundItem = backgroundItem;
+        }
+    }
+
+    public struct SignalSaveRecord {
+        public float GameTime { get; }
+        public float Reward { get; }
+
+        public SignalSaveRecord(float gameTime, float reward) {
+            GameTime = gameTime;
+            Reward = reward;
         }
     }
 }

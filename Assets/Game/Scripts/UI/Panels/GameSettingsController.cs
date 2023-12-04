@@ -41,9 +41,15 @@ namespace Game.Scripts.UI.Panels {
 
         public void ParceValue(out float multiply, out float amount) {
             float.TryParse(_multiplyField.text, out float parceMultiply);
-            multiply = parceMultiply == 0 ? 1.5f : parceMultiply;
+            multiply = parceMultiply < 1.5f ? 1.5f : parceMultiply;
             float.TryParse(_amountField.text, out float parceAmount);
-            amount = parceAmount == 0 ? 100 : parceAmount;
+            amount = parceAmount < 100 ? 100 : parceAmount;
+            UpdateField(multiply, amount);
+        }
+
+        private void UpdateField(float multiply, float amount) {
+            _multiplyField.text = $"{multiply:f1}X";
+            _amountField.text = $"${amount}";
         }
 
         private void OnDestroy() {

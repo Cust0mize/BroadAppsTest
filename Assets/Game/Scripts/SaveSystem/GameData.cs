@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Game.Scripts.UI.Panels.Record;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using System;
 using Enums;
@@ -78,8 +79,8 @@ public class GameData {
             _selectCustomElement.AddRange(value);
             Save();
         }
-    }    
-    
+    }
+
     private Dictionary<AchivmentType, float> _achivmentValue = new();
     public Dictionary<AchivmentType, float> AchivmentValue {
         get { return _achivmentValue; }
@@ -87,13 +88,49 @@ public class GameData {
             _achivmentValue.AddRange(value);
             Save();
         }
-    }    
-    
+    }
+
     private Dictionary<AchivmentType, List<float>> _takedReward = new();
     public Dictionary<AchivmentType, List<float>> TakedReward {
         get { return _takedReward; }
         set {
             _takedReward.AddRange(value);
+            Save();
+        }
+    }
+
+    private AllGameRecordInfo[] _allGameRecords = new AllGameRecordInfo[5];
+    public AllGameRecordInfo[] AllGameRecords {
+        get { return _allGameRecords; }
+        set {
+            _allGameRecords = value;
+            Save();
+        }
+    }
+
+    private BestRecordInfo[] _bestGameRecords = new BestRecordInfo[3];
+    public BestRecordInfo[] BestGameRecords {
+        get { return _bestGameRecords; }
+        set {
+            _bestGameRecords = value;
+            Save();
+        }
+    }
+
+    private List<string> _buyRoutes = new();
+    public List<string> BuyRoutes {
+        get { return _buyRoutes; }
+        set {
+            _buyRoutes = value;
+            Save();
+        }
+    }
+
+    private int _currentLevelPlane = new();
+    public int CurrentLevelPlane {
+        get { return _currentLevelPlane; }
+        set {
+            _currentLevelPlane = value;
             Save();
         }
     }
@@ -114,13 +151,17 @@ public class GameData {
         if (gameData == null) {
             return;
         }
+        BuyRoutes = gameData.BuyRoutes;
         TakedReward = gameData.TakedReward;
         CurrentLevel = gameData.CurrentLevel;
         CurrentMoney = gameData.CurrentMoney;
         BuyShopItems = gameData.BuyShopItems;
         UpgradeLevels = gameData.UpgradeLevels;
+        AllGameRecords = gameData.AllGameRecords;
         AchivmentValue = gameData.AchivmentValue;
+        BestGameRecords = gameData.BestGameRecords;
         CurrentGamemode = gameData.CurrentGamemode;
+        CurrentLevelPlane = gameData.CurrentLevelPlane;
         CurrentComplexity = gameData.CurrentComplexity;
         SelectCustomElement = gameData.SelectCustomElement;
         CurrentLevelProgressValue = gameData.CurrentLevelProgressValue;
@@ -136,5 +177,8 @@ public class GameData {
         UpgradeLevels = new();
         AchivmentValue = new();
         SelectCustomElement = new();
+        AllGameRecords = new AllGameRecordInfo[5];
+        BestGameRecords = new BestRecordInfo[3];
+        CurrentLevelPlane = 0;
     }
 }

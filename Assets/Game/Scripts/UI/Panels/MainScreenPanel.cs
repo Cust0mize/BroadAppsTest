@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using Zenject;
 using TMPro;
+using Game.Scripts.UI.Panels.Record;
 
 namespace Game.Scripts.UI.Panels {
     public class MainScreenPanel : UIPanel, ILoadableElement {
@@ -66,7 +67,7 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void RecordClick() {
-
+            UIService.OpenPanel<RecordPanel>();
         }
 
         private void MoreClick() {
