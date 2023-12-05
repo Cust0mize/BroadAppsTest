@@ -2,12 +2,13 @@
 using Game.Scripts.Signal;
 using Zenject;
 using Enums;
+
 namespace Game.Scripts.Game.Gamemodes {
     public class ClassicGame : BaseGame {
         public ClassicGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, GameService gameService, UIService uIService, SignalBus signalBus) : base(gameSettingsController, currenciesService, gameService, uIService, signalBus) {
         }
 
-        protected override Gamemode GameMode => Gamemode.Classic;
+        public override Gamemode GameMode => Gamemode.Classic;
 
         public override void GameUpdate() {
             base.GameUpdate();
@@ -22,6 +23,9 @@ namespace Game.Scripts.Game.Gamemodes {
                 float rewardValue = Amount * CurrentMultiply;
                 SignalBus.Fire(new SignalWinGame(rewardValue, EndTime));
             }
+        }
+
+        public override void SetStartValue() {
         }
 
         public override void StopGame(SignalStopGame signalStopGame) {

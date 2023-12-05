@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Game.Scripts.Signal;
+﻿using Game.Scripts.Signal;
 using UnityEngine.UI;
 using UnityEngine;
 using Zenject;
@@ -33,6 +32,20 @@ namespace Game.Scripts.UI.Panels {
                 UIService.HidePanelBypassStack<TaskGameModePanel>();
                 UIService.OpenPanel<ComplexityPanel>();
             }
+        }
+    }
+
+    public class TaskModeController {
+        public TimeSpan TargetGameTime { get; private set; }
+        public float TaskValue { get; private set; }
+
+        public TaskModeController(SignalBus signalBus) {
+            signalBus.Subscribe<SignalStartTaskModeGame>(UpdateValue);
+        }
+
+        private void UpdateValue(SignalStartTaskModeGame signalStartTaskModeGame) {
+            TargetGameTime = signalStartTaskModeGame.GameTime;
+            TaskValue = signalStartTaskModeGame.TaskValue;
         }
     }
 }

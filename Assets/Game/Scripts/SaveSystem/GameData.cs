@@ -126,11 +126,29 @@ public class GameData {
         }
     }
 
-    private int _currentLevelPlane = new();
+    private int _currentLevelPlane;
     public int CurrentLevelPlane {
         get { return _currentLevelPlane; }
         set {
             _currentLevelPlane = value;
+            Save();
+        }
+    }
+
+    private DateTime _lastEntryTime = DateTime.Now - TimeSpan.FromDays(1);
+    public DateTime LastEntryTime {
+        get { return _lastEntryTime; }
+        set {
+            _lastEntryTime = value;
+            Save();
+        }
+    }
+
+    private int _dayIndex;
+    public int DayIndex {
+        get { return _dayIndex; }
+        set {
+            _dayIndex = value;
             Save();
         }
     }
@@ -156,6 +174,7 @@ public class GameData {
         CurrentLevel = gameData.CurrentLevel;
         CurrentMoney = gameData.CurrentMoney;
         BuyShopItems = gameData.BuyShopItems;
+        LastEntryTime = gameData.LastEntryTime;
         UpgradeLevels = gameData.UpgradeLevels;
         AllGameRecords = gameData.AllGameRecords;
         AchivmentValue = gameData.AchivmentValue;

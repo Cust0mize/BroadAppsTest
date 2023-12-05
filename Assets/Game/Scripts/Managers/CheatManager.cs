@@ -15,15 +15,15 @@ public class CheatManager : MonoBehaviour {
         _levelService = levelService;
     }
 
-    private void Update() {
-        if (Input.GetMouseButtonDown(0)) {
-            _levelService.AddLevelProgressValue(900);
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-            _currenciesService.RemoveMoney(100);
-        }        
-        if (Input.GetKeyDown(KeyCode.RightArrow)) {
-            _currenciesService.AddMoney(100);
-        }
-    }
+    //private void Update() {
+    //    if (Input.GetMouseButtonDown(0)) {
+    //        _levelService.AddLevelProgressValue(900);
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+    //        _currenciesService.RemoveMoney(100);
+    //    }        
+    //    if (Input.GetKeyDown(KeyCode.RightArrow)) {
+    //        _currenciesService.AddMoney(100);
+    //    }
+    //}
 }

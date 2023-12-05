@@ -1,5 +1,4 @@
-﻿using Game.Scripts.Game.GameValue;
-using Game.Scripts.UI.Panels;
+﻿using Game.Scripts.UI.Panels;
 using Game.Scripts.Signal;
 using UnityEngine;
 using Zenject;
@@ -7,8 +6,7 @@ using Enums;
 
 namespace Game.Scripts.Game.Gamemodes {
     public abstract class BaseGame {
-        protected BaseStartGameValue BaseStartGameValue;
-        protected abstract Gamemode GameMode { get; }
+        public abstract Gamemode GameMode { get; }
 
         private GameSettingsController _gameSettingsController;
         private GameService _gameService;
@@ -41,9 +39,7 @@ namespace Game.Scripts.Game.Gamemodes {
             SignalBus = signalBus;
         }
 
-        public virtual void SetStartValue(BaseStartGameValue startGameValue) {
-            BaseStartGameValue = startGameValue;
-        }
+        public abstract void SetStartValue();
 
         public virtual void GameUpdate() {
             if (IsStartGame) {
@@ -62,7 +58,7 @@ namespace Game.Scripts.Game.Gamemodes {
             Multiply = multiply;
             Amount = amount;
             StartTimeGame = Time.time;
-            MultiplyAnimationCurve = _gameService.GetNewCurve(0.1f, 0.95f);///////////
+            MultiplyAnimationCurve = _gameService.GetNewCurve(0.1f, 0.95f);//???
         }
 
         public virtual void StopGame(SignalStopGame signalStopGame) {

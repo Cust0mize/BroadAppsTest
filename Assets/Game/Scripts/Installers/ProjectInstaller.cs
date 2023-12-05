@@ -6,6 +6,7 @@ using Zenject;
 public class ProjectInstaller : MonoInstaller {
     public override void InstallBindings() {
         Container.Bind<AudioMixerManager>().FromComponentInHierarchy().AsTransient().NonLazy();
+        Container.BindInterfacesAndSelfTo<EveryDayCounterService>().AsSingle().NonLazy();
         Container.Bind<ParticleAnimationService>().AsSingle().NonLazy();
         Container.Bind<WindowShowHideAnimation>().AsSingle().NonLazy();
         Container.Bind<ResourceLoaderService>().AsSingle().NonLazy();
@@ -23,6 +24,7 @@ public class ProjectInstaller : MonoInstaller {
         Container.DeclareSignal<SignalSelectAvailableElement>().OptionalSubscriber();
         Container.DeclareSignal<SignalStartTwoPersonModeGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalUpdateResultTwoGame>().OptionalSubscriber();
+        Container.DeclareSignal<SignalDownMultipleUpdate>().OptionalSubscriber();
         Container.DeclareSignal<SignalStartTaskModeGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalStartTaskModeGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalUpdateAchivment>().OptionalSubscriber();
@@ -31,7 +33,9 @@ public class ProjectInstaller : MonoInstaller {
         Container.DeclareSignal<SignalUpdateLevel>().OptionalSubscriber();
         Container.DeclareSignal<SignalMoneyUpdate>().OptionalSubscriber();
         Container.DeclareSignal<SignalSelectRoute>().OptionalSubscriber();
+        Container.DeclareSignal<SignalEndTaskGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalSaveRecord>().OptionalSubscriber();
+        Container.DeclareSignal<SignalGameIsLoad>().OptionalSubscriber();
         Container.DeclareSignal<SignalResetGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalStartGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalLooseGame>().OptionalSubscriber();
@@ -40,5 +44,6 @@ public class ProjectInstaller : MonoInstaller {
         Container.DeclareSignal<SignalNoMoney>().OptionalSubscriber();
         Container.DeclareSignal<OpenGamePanel>().OptionalSubscriber();
         Container.DeclareSignal<SignalWinGame>().OptionalSubscriber();
+        Container.DeclareSignal<SignalNewDay>().OptionalSubscriber();
     }
 }

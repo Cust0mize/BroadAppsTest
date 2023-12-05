@@ -50,18 +50,4 @@ namespace Game.Scripts.UI.Panels {
             TargetGameTime = signalStartTwoPersonModeGame.GameTime;
         }
     }
-
-    public class TaskModeController {
-        public TimeSpan TargetGameTime { get; private set; }
-        public float TaskValue { get; private set; }
-
-        public TaskModeController(SignalBus signalBus) {
-            signalBus.Subscribe<SignalStartTaskModeGame>(UpdateValue);
-        }
-
-        private void UpdateValue(SignalStartTaskModeGame signalStartTaskModeGame) {
-            TargetGameTime = signalStartTaskModeGame.GameTime;
-            TaskValue = signalStartTaskModeGame.TaskValue;
-        }
-    }
 }

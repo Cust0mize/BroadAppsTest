@@ -1,7 +1,8 @@
-﻿using Game.Scripts.Game.GameValue;
-using Game.Scripts.Game.Gamemodes;
+﻿using Game.Scripts.Game.Gamemodes;
+using System.Collections.Generic;
 using Game.Scripts.Signal;
 using Game.Scripts.Game;
+using System.Linq;
 using UnityEngine;
 using Zenject;
 using TMPro;
@@ -9,6 +10,7 @@ using Enums;
 
 namespace Game.Scripts.UI.Panels {
     public class GameController : MonoBehaviour {
+        [SerializeField] private AnimationCurve _animationCurve;
         [SerializeField] private TextMeshProUGUI _downMultiplyTextUI;
         [SerializeField] private TextMeshProUGUI _endSityCityTextUI;
         [SerializeField] private TextMeshProUGUI _playerNameTextUI;
@@ -18,36 +20,30 @@ namespace Game.Scripts.UI.Panels {
         [SerializeField] private float minValue = 0.1f;
         [SerializeField] Player _player;
 
-        private GameData _gameData;
+        private TwoPersonModeController _twoPersonModeController;
         private RouteController _routeController;
 
+        private IEnumerable<BaseGame> _allGames;
+        private GameData _gameData;
         private BaseGame _baseGame;
-        private TripGame _tripGame;
-        private TwoPersonGame _twoPersonGame;
-        private ClassicGame _classicGame;
-
-        private TwoPersonModeController _twoPersonModeController;
-        [SerializeField] private AnimationCurve _animationCurve;
 
         [Inject]
         private void Construct(
         TwoPersonModeController twoPersonModeController,
+        IEnumerable<BaseGame> _baseGames,
         RouteController routeController,
-        TwoPersonGame twoPersonGame,
-        ClassicGame classicGame,
         SignalBus signalBus,
-        TripGame tripGame,
         GameData gameData
         ) {
             _twoPersonModeController = twoPersonModeController;
             _routeController = routeController;
-            _twoPersonGame = twoPersonGame;
-            _classicGame = classicGame;
-            _tripGame = tripGame;
             _gameData = gameData;
+            signalBus.Subscribe<SignalDownMultipleUpdate>(DownMultipleUpdate);
+            signalBus.Subscribe<OpenGamePanel>(OpenGameWindow);
             signalBus.Subscribe<SignalStartGame>(StartGame);
-            signalBus.Subscribe<OpenGamePanel>(UpdateUI);
             signalBus.Subscribe<SignalStopGame>(StopGame);
+
+            _allGames = _baseGames;
         }
 
         private void Start() {
@@ -63,34 +59,18 @@ namespace Game.Scripts.UI.Panels {
 
         private void Game() {
             UIUpdate();
-
-            switch (_gameData.CurrentGamemode) {
-                case Gamemode.Classic: ClassicGame(); break;
-                case Gamemode.Trip: TripGame(); break;
-                case Gamemode.Task: break;
-                case Gamemode.Two: TwoPersonGame(); break;
-            }
+            _baseGame.GameUpdate();
         }
 
-        private void TwoPersonGame() {
-            _twoPersonGame.GameUpdate();
-            _downMultiplyTextUI.text = _twoPersonGame.CurrentTimeSpan.ToString(@"mm\:ss");
-        }
-
-        private void TripGame() {
-            _tripGame.GameUpdate();
-            _downMultiplyTextUI.text = $"{_tripGame.DownMultiplyValue:f2} km";
-        }
-
-        private void ClassicGame() {
-            _classicGame.GameUpdate();
+        private void DownMultipleUpdate(SignalDownMultipleUpdate signalDownMultipleUpdate) {
+            _downMultiplyTextUI.text = signalDownMultipleUpdate.Text;
         }
 
         private void StopGame(SignalStopGame signalStopGame) {
             _baseGame.StopGame(signalStopGame);
             _player.UpdatePosition(0.1f);
             SetMultipleTextState(false);
-            _playerNameTextUI.text = $"Player {_twoPersonGame.CurrentPlayerIndex}\n{_twoPersonModeController.SecondPersonName}";
+            _playerNameTextUI.text = $"Player {2}\n{_twoPersonModeController.SecondPersonName}";
         }
 
         private void UIUpdate() {
@@ -104,26 +84,21 @@ namespace Game.Scripts.UI.Panels {
             _animationCurve = _baseGame.MultiplyAnimationCurve;
         }
 
+        private void OpenGameWindow() {
+            UpdateUI();
+            SetStateUI(_gameData.CurrentGamemode);
+            _baseGame = _allGames.FirstOrDefault(x => x.GameMode == _gameData.CurrentGamemode);
+            _baseGame.SetStartValue();
+        }
+
         private void UpdateUI() {
             switch (_gameData.CurrentGamemode) {
-                case Gamemode.Classic:
-                    SetStateUI(Gamemode.Classic);
-                    _classicGame.SetStartValue(new BaseStartGameValue());
-                    _baseGame = _classicGame;
-                    break;
                 case Gamemode.Trip:
-                    SetStateUI(Gamemode.Trip);
-                    _tripGame.SetStartValue(new StartTripValue(_routeController.CurrentSelectedRouteConfig.RouteDistance));
-                    _baseGame = _tripGame;
                     _startCity.text = _routeController.CurrentSelectedRouteConfig.StartCity;
                     _endSityCityTextUI.text = _routeController.CurrentSelectedRouteConfig.EndSityCity;
                     break;
-                case Gamemode.Task: break;
                 case Gamemode.Two:
-                    SetStateUI(Gamemode.Two);
-                    _twoPersonGame.SetStartValue(new StartTwoGameValue(_twoPersonModeController.TargetGameTime, 2));
-                    _baseGame = _twoPersonGame;
-                    _playerNameTextUI.text = $"Player {_twoPersonGame.CurrentPlayerIndex}\n{_twoPersonModeController.FirstPersonName}";
+                    _playerNameTextUI.text = $"Player {1}\n{_twoPersonModeController.FirstPersonName}";
                     break;
             }
         }
@@ -135,9 +110,7 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void SetMultipleTextState(bool state) {
-            _downMultiplyTextUI.gameObject.SetActive(
-            _gameData.CurrentGamemode == Gamemode.Trip && state ||
-            _gameData.CurrentGamemode == Gamemode.Two && state);
+            _downMultiplyTextUI.gameObject.SetActive(_gameData.CurrentGamemode != Gamemode.Classic && state);
             _multiplyTextUI.gameObject.SetActive(state);
         }
     }

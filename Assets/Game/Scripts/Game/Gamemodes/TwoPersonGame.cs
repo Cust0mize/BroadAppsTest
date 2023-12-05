@@ -1,5 +1,4 @@
-﻿using Game.Scripts.Game.GameValue;
-using Game.Scripts.UI.Panels;
+﻿using Game.Scripts.UI.Panels;
 using Game.Scripts.Signal;
 using UnityEngine;
 using Zenject;
@@ -14,7 +13,7 @@ namespace Game.Scripts.Game.Gamemodes {
             _twoPersonModeController = twoPersonModeController;
         }
 
-        protected override Gamemode GameMode => Gamemode.Two;
+        public override Gamemode GameMode => Gamemode.Two;
         public TimeSpan CurrentTimeSpan { get; private set; }
         public TimeSpan StartTimeSpan { get; private set; }
         public int PlayerCount { get; private set; }
@@ -22,17 +21,13 @@ namespace Game.Scripts.Game.Gamemodes {
         public float FirstResultValue { get; private set; }
         public float SecondResultValue { get; private set; }
 
-        public override void SetStartValue(BaseStartGameValue startGameValue) {
-            base.SetStartValue(startGameValue);
-
-            if (BaseStartGameValue is StartTwoGameValue startTwoGameValue) {
-                CurrentPlayerIndex = startTwoGameValue.CurrentPlayerIndex;
-                SecondResultValue = startTwoGameValue.SecondResultValue;
-                FirstResultValue = startTwoGameValue.FirstResultValue;
-                StartTimeSpan = startTwoGameValue.StartTimeSpan;
-                PlayerCount = startTwoGameValue.PlayerCount;
-                CurrentTimeSpan = StartTimeSpan;
-            }
+        public override void SetStartValue() {
+            CurrentTimeSpan = _twoPersonModeController.TargetGameTime;
+            StartTimeSpan = _twoPersonModeController.TargetGameTime;
+            CurrentPlayerIndex = 1;
+            SecondResultValue = 0;
+            FirstResultValue = 0;
+            PlayerCount = 2;
         }
 
         public void GoNexPlayer() {
@@ -53,6 +48,7 @@ namespace Game.Scripts.Game.Gamemodes {
             if (CurrentTimeSpan < TimeSpan.FromSeconds(0)) {
                 SignalBus.Fire(new SignalStopGame(true));
             }
+            SignalBus.Fire(new SignalDownMultipleUpdate(CurrentTimeSpan.ToString(@"mm\:ss")));
         }
 
         public void AddResultValue() {

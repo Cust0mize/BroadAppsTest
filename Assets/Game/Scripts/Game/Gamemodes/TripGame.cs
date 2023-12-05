@@ -1,5 +1,4 @@
-﻿using Game.Scripts.Game.GameValue;
-using Game.Scripts.UI.Panels;
+﻿using Game.Scripts.UI.Panels;
 using Game.Scripts.Signal;
 using UnityEngine;
 using Zenject;
@@ -7,21 +6,19 @@ using Enums;
 
 namespace Game.Scripts.Game.Gamemodes {
     public class TripGame : BaseGame {
+        private RouteController _routeController;
         public float StartDownMultiplyValue;
         public float DownMultiplyValue;
 
-        public TripGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, GameService gameService, UIService uIService, SignalBus signalBus) : base(gameSettingsController, currenciesService, gameService, uIService, signalBus) {
+        public TripGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, GameService gameService, UIService uIService, SignalBus signalBus, RouteController routeController) : base(gameSettingsController, currenciesService, gameService, uIService, signalBus) {
+            _routeController = routeController;
         }
 
-        protected override Gamemode GameMode => Gamemode.Trip;
+        public override Gamemode GameMode => Gamemode.Trip;
 
-        public override void SetStartValue(BaseStartGameValue startGameValue) {
-            base.SetStartValue(startGameValue);
-
-            if (BaseStartGameValue is StartTripValue startTripValue) {
-                StartDownMultiplyValue = startTripValue.StartDownMultiplyValue;
-                DownMultiplyValue = startTripValue.DownMultiplyValue;
-            }
+        public override void SetStartValue() {
+            StartDownMultiplyValue = _routeController.CurrentSelectedRouteConfig.RouteDistance;
+            DownMultiplyValue = _routeController.CurrentSelectedRouteConfig.RouteDistance;
         }
 
         public override void GameUpdate() {
@@ -36,6 +33,7 @@ namespace Game.Scripts.Game.Gamemodes {
                 SignalBus.Fire<SignalLooseGame>();
                 SignalBus.Fire(new SignalStopGame(false));
             }
+            SignalBus.Fire(new SignalDownMultipleUpdate($"{DownMultiplyValue:f2} km"));
         }
 
         public override void SetResult() {

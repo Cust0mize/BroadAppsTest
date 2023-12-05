@@ -4,15 +4,24 @@ using Enums;
 
 namespace Game.Scripts.Signal {
     public struct SignalResetGame {
-
     }
 
     public struct SignalNoMoney {
-
     }
 
     public struct SignalStartGame {
+    }
 
+    public struct SignalEndTaskGame {
+        public float ResultValue { get; }
+        public float RewardValue { get; }
+        public bool IsWin { get; }
+
+        public SignalEndTaskGame(float rewardValue, bool isWin, float resultValue) {
+            RewardValue = rewardValue;
+            ResultValue = resultValue;
+            IsWin = isWin;
+        }
     }
 
     public struct SignalWinGame {
@@ -34,7 +43,12 @@ namespace Game.Scripts.Signal {
     }
 
     public struct SignalLooseGame {
+    }   
+    
+    public struct SignalNewDay {
+    }    
 
+    public struct SignalGameIsLoad {
     }
 
     public struct SignalStartTwoPersonModeGame {
@@ -106,6 +120,14 @@ namespace Game.Scripts.Signal {
     }
 
     public struct OpenGamePanel {
+    }
+
+    public struct SignalDownMultipleUpdate {
+        public string Text { get; }
+
+        public SignalDownMultipleUpdate(string text) {
+            Text = text;
+        }
     }
 
     public struct SignalUpdateAirplane {
