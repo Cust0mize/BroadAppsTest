@@ -23,7 +23,9 @@ public class EntryPointStarter : MonoBehaviour {
         _gameData = gameData;
     }
 
-    private void Start() {
+    private async void Start() {
+        await RemoteConfig.Init();
+
         _loadImage.fillAmount = 0;
         _gameData.Init(_saveSystem);
         _gameData.SetValue(_saveSystem.LoadFromDevice());

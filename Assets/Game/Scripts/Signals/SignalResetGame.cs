@@ -46,6 +46,9 @@ namespace Game.Scripts.Signal {
     }   
     
     public struct SignalNewDay {
+    }       
+
+    public struct SignalNextOnBoardingClick {
     }    
 
     public struct SignalGameIsLoad {

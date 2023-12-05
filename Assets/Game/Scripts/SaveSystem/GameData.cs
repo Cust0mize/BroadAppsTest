@@ -153,6 +153,15 @@ public class GameData {
         }
     }
 
+    private bool _isShowOnboarding = true;
+    public bool IsShowOnboarding {
+        get { return _isShowOnboarding; }
+        set {
+            _isShowOnboarding = value;
+            Save();
+        }
+    }
+
     #endregion
 
     public void Init(SaveSystem saveSystem) {
@@ -182,6 +191,7 @@ public class GameData {
         AchivmentValue = gameData.AchivmentValue;
         BestGameRecords = gameData.BestGameRecords;
         CurrentGamemode = gameData.CurrentGamemode;
+        IsShowOnboarding = gameData.IsShowOnboarding;
         CurrentLevelPlane = gameData.CurrentLevelPlane;
         CurrentComplexity = gameData.CurrentComplexity;
         SelectCustomElement = gameData.SelectCustomElement;

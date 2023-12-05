@@ -23,6 +23,7 @@ public class ProjectInstaller : MonoInstaller {
 
         Container.DeclareSignal<SignalSelectAvailableElement>().OptionalSubscriber();
         Container.DeclareSignal<SignalStartTwoPersonModeGame>().OptionalSubscriber();
+        Container.DeclareSignal<SignalNextOnBoardingClick>().OptionalSubscriber();
         Container.DeclareSignal<SignalUpdateResultTwoGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalDownMultipleUpdate>().OptionalSubscriber();
         Container.DeclareSignal<SignalStartTaskModeGame>().OptionalSubscriber();
