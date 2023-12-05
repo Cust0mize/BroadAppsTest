@@ -49,6 +49,16 @@ namespace Game.Scripts.Signal {
         }
     }
 
+    public struct SignalStartTaskModeGame {
+        public TimeSpan GameTime { get; }
+        public float TaskValue { get; }
+
+        public SignalStartTaskModeGame(TimeSpan timeSpan, float taskValue) {
+            TaskValue = taskValue;
+            GameTime = timeSpan;
+        }
+    }
+
     public struct SignalUpdateResultTwoGame {
         public int WinPlayerIndex { get; }
         public float[] Rewards { get; }

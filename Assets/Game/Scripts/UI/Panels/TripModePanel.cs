@@ -12,7 +12,6 @@ namespace Game.Scripts.UI.Panels {
         [SerializeField] private RouteElement _routeElementPrefab;
         [SerializeField] private RouteConfig[] _routeConfigs;
         [SerializeField] private Button _startGameButton;
-        [SerializeField] private Button _backButton;
         private List<RouteElement> _routeElements = new();
         private RouteController _routeController;
         private DiContainer _diContainer;
@@ -50,7 +49,6 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void Start() {
-            _backButton.RemoveAllAndSubscribeButton(() => UIService.HidePanelBypassStack<TripModePanel>());
             _startGameButton.RemoveAllAndSubscribeButton(StartButtonClick);
 
             for (int i = 0; i < _routeConfigs.Length; i++) {

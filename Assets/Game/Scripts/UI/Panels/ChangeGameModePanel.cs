@@ -8,7 +8,6 @@ namespace Game.Scripts.UI.Panels {
         [SerializeField] private Button _classicTwoPersonGame;
         [SerializeField] private Button _classicWithATaskGame;
         [SerializeField] private Button _classicGame;
-        [SerializeField] private Button _hideButton;
         [SerializeField] private Button _tripGame;
         private GameData _gameData;
 
@@ -21,7 +20,6 @@ namespace Game.Scripts.UI.Panels {
             _classicTwoPersonGame.RemoveAllAndSubscribeButton(TwoGameClick);
             _classicWithATaskGame.RemoveAllAndSubscribeButton(TaskGameClick);
             _classicGame.RemoveAllAndSubscribeButton(ClassicClick);
-            _hideButton.RemoveAllAndSubscribeButton(HideClick);
             _tripGame.RemoveAllAndSubscribeButton(TripClick);
         }
 
@@ -34,15 +32,11 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void TaskGameClick() {
-            SelectGamemode<TaskModePanel>(Gamemode.Task);
+            SelectGamemode<TaskGameModePanel>(Gamemode.Task);
         }
 
         private void TwoGameClick() {
             SelectGamemode<TwoModePanel>(Gamemode.Two);
-        }
-
-        private void HideClick() {
-            UIService.HidePanelBypassStack<ChangeGameModePanel>();
         }
 
         private void SelectGamemode<T>(Gamemode gamemode) where T : UIPanel {
@@ -51,9 +45,4 @@ namespace Game.Scripts.UI.Panels {
             UIService.OpenPanel<T>();
         }
     }
-
-    public class TaskModePanel : UIPanel {
-
-    }
 }
-

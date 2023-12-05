@@ -1,3 +1,4 @@
+using Game.Scripts.Game.Gamemodes;
 using Game.Scripts.UI.Panels;
 using Game.Scripts.Game;
 using UnityEngine;
@@ -20,5 +21,6 @@ public class GameSceneInstaller : MonoInstaller {
         Container.Bind<TwoPersonGame>().AsCached().NonLazy();
         Container.Bind<GameService>().AsCached().NonLazy();
         Container.Bind<ClassicGame>().AsCached().NonLazy();
+        Container.Bind<TripGame>().AsCached().NonLazy();
     }
 }

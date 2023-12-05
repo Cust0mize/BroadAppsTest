@@ -9,12 +9,10 @@ namespace Game.Scripts.UI.Panels {
     public class TwoModePanel : UIPanel {
         [SerializeField] private TMP_InputField _secondPlayerNameField;
         [SerializeField] private TMP_InputField _firstPlayerNameField;
-        [SerializeField] private TextMeshProUGUI _currentTimeTextUI;
         [SerializeField] private Button _startButton;
-        [SerializeField] private Button _removeTime;
-        [SerializeField] private Button _addTime;
+        [SerializeField] private Timer _timer;
+
         private SignalBus _signalBus;
-        private float _currentTime;
 
         [Inject]
         private void Construct(SignalBus signalBus) {
@@ -23,28 +21,16 @@ namespace Game.Scripts.UI.Panels {
 
         private void Start() {
             _startButton.RemoveAllAndSubscribeButton(StartGameClick);
-            _removeTime.RemoveAllAndSubscribeButton(Remove10SecClick);
-            _addTime.RemoveAllAndSubscribeButton(Add10SecClick);
-            _currentTimeTextUI.text = TimeSpan.FromSeconds(_currentTime).ToString(@"mm\:ss");
-        }
-
-        private void Add10SecClick() {
-            if ((TimeSpan.FromSeconds(_currentTime) < TimeSpan.FromMinutes(10))) {
-                _currentTime += 10;
-                _currentTimeTextUI.text = TimeSpan.FromSeconds(_currentTime).ToString(@"mm\:ss");
-            }
         }
 
         private void StartGameClick() {
-            _signalBus.Fire(new SignalStartTwoPersonModeGame(TimeSpan.FromSeconds(_currentTime), _firstPlayerNameField.text, _secondPlayerNameField.text));
-            UIService.HidePanelBypassStack<TwoModePanel>();
-            UIService.OpenPanel<GamePanel>();
-        }
+            if (_timer.TimerValueNotEmpty()) {
+                string secondPlayerName = string.IsNullOrEmpty(_secondPlayerNameField.text) ? "NoName2" : _secondPlayerNameField.text;
+                string firstPlayerName = string.IsNullOrEmpty(_firstPlayerNameField.text) ? "NoName1" : _firstPlayerNameField.text;
 
-        private void Remove10SecClick() {
-            if ((TimeSpan.FromSeconds(_currentTime) > TimeSpan.FromSeconds(0))) {
-                _currentTime -= 10;
-                _currentTimeTextUI.text = TimeSpan.FromSeconds(_currentTime).ToString(@"mm\:ss");
+                _signalBus.Fire(new SignalStartTwoPersonModeGame(TimeSpan.FromSeconds(_timer.CurrentTime), firstPlayerName, secondPlayerName)); ;
+                UIService.HidePanelBypassStack<TwoModePanel>();
+                UIService.OpenPanel<ComplexityPanel>();
             }
         }
     }
@@ -54,11 +40,8 @@ namespace Game.Scripts.UI.Panels {
         public TimeSpan TargetGameTime { get; private set; }
         public string FirstPersonName { get; private set; }
 
-        private SignalBus _signalBus;
-
         public TwoPersonModeController(SignalBus signalBus) {
-            _signalBus = signalBus;
-            _signalBus.Subscribe<SignalStartTwoPersonModeGame>(UpdateValue);
+            signalBus.Subscribe<SignalStartTwoPersonModeGame>(UpdateValue);
         }
 
         private void UpdateValue(SignalStartTwoPersonModeGame signalStartTwoPersonModeGame) {
@@ -67,5 +50,18 @@ namespace Game.Scripts.UI.Panels {
             TargetGameTime = signalStartTwoPersonModeGame.GameTime;
         }
     }
-}
 
+    public class TaskModeController {
+        public TimeSpan TargetGameTime { get; private set; }
+        public float TaskValue { get; private set; }
+
+        public TaskModeController(SignalBus signalBus) {
+            signalBus.Subscribe<SignalStartTaskModeGame>(UpdateValue);
+        }
+
+        private void UpdateValue(SignalStartTaskModeGame signalStartTaskModeGame) {
+            TargetGameTime = signalStartTaskModeGame.GameTime;
+            TaskValue = signalStartTaskModeGame.TaskValue;
+        }
+    }
+}
