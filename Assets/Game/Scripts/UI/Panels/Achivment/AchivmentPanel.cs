@@ -4,9 +4,6 @@ using UnityEngine;
 using Zenject;
 using System;
 using Enums;
-using TMPro;
-using System.Runtime.CompilerServices;
-using UnityEditor.Tilemaps;
 
 namespace Game.Scripts.UI.Panels.Achivment {
     public class AchivmentPanel : UIPanel, ILoadableElement {
@@ -64,7 +61,8 @@ namespace Game.Scripts.UI.Panels.Achivment {
         }
 
         private void UpdateAchivmentValue(SignalUpdateAchivment signalUpdateAchivment) {
-            _gameData.AchivmentValue[signalUpdateAchivment.AchivmentType] += signalUpdateAchivment.Value;
+            _gameData.AchivmentValue[signalUpdateAchivment.AchivmentType] += Mathf.Abs(signalUpdateAchivment.Value);
+
             for (int i = 0; i < _achivmentItems.Count; i++) {
                 if (signalUpdateAchivment.AchivmentType == _achivmentItems[i].AchivmentType) {
                     _achivmentItems[i].UpdateValue(_gameData.AchivmentValue[signalUpdateAchivment.AchivmentType]);

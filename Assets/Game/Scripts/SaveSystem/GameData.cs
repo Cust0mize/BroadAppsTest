@@ -169,6 +169,8 @@ public class GameData {
         if (gameData == null) {
             return;
         }
+
+        DayIndex = gameData.DayIndex;
         BuyRoutes = gameData.BuyRoutes;
         TakedReward = gameData.TakedReward;
         CurrentLevel = gameData.CurrentLevel;
@@ -187,17 +189,23 @@ public class GameData {
     }
 
     public void ResetGame() {
+        DayIndex = 0;
+        BuyRoutes.Clear();
+        TakedReward.Clear();
+        LastEntryTime = DateTime.Now;
         CurrentLevel = 0;
         CurrentMoney = 5000;
         CurrentGamemode = Gamemode.Classic;
         CurrentComplexity = Complexity.Easy;
         CurrentLevelProgressValue = 0;
-        BuyShopItems = new();
-        UpgradeLevels = new();
-        AchivmentValue = new();
-        SelectCustomElement = new();
+        BuyShopItems.Clear();
+        UpgradeLevels.Clear();
+        AchivmentValue.Clear();
+
+        SelectCustomElement.Clear();
         AllGameRecords = new AllGameRecordInfo[5];
         BestGameRecords = new BestRecordInfo[3];
         CurrentLevelPlane = 0;
+        Save();
     }
 }

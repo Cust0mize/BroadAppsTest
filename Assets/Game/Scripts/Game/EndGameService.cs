@@ -1,5 +1,4 @@
 ﻿using Game.Scripts.Signal;
-using UnityEngine;
 using Zenject;
 
 namespace Game.Scripts.Game {
@@ -18,8 +17,8 @@ namespace Game.Scripts.Game {
         }
 
         private void ResetGame() {
-            PlayerPrefs.DeleteAll();
-            _sceneLoaderService.LoadScene(SceneName.Game);
+            _gameData.ResetGame();
+            _sceneLoaderService.LoadScene(SceneName.EntryPointStarter);
         }
     }
 }

@@ -3,6 +3,8 @@ using Game.Scripts.Signal;
 using System.Linq;
 using Zenject;
 using System;
+using System.Collections.Generic;
+using Unity.Burst.Intrinsics;
 
 namespace Game.Scripts.Game {
     public class RecordController {
@@ -28,22 +30,13 @@ namespace Game.Scripts.Game {
         }
 
         private void SaveBestRecordElement(BestRecordInfo bestRecordElement) {
-            int bestRecordNullElementIdex = -1;
-            for (int i = 0; i < _gameData.BestGameRecords.Length; i++) {
-                if (_gameData.BestGameRecords[i] == null) {
-                    bestRecordNullElementIdex = i;
-                    break;
-                }
-            }
+            int bestRecordNullElementIdex = Array.IndexOf(_gameData.BestGameRecords, null);
 
             if (bestRecordNullElementIdex == -1) {
                 if (bestRecordElement.Reward < _gameData.BestGameRecords[_gameData.BestGameRecords.Length - 1].Reward) {
                     return;
                 }
-                var list = _gameData.BestGameRecords.ToList();
-                list.Sort((x, y) => x.Reward.CompareTo(y.Reward));
-                list.Reverse();
-                _gameData.BestGameRecords = list.ToArray();
+
                 var currentElement = bestRecordElement;
                 for (int i = 0; i < _gameData.BestGameRecords.Length; i++) {
                     if (currentElement.Reward > _gameData.BestGameRecords[i].Reward) {
@@ -60,7 +53,12 @@ namespace Game.Scripts.Game {
             }
             else {
                 _gameData.BestGameRecords[bestRecordNullElementIdex] = bestRecordElement;
+                Array.Sort(_gameData.BestGameRecords, ((x, y) => Comparer<float>.Default.Compare(GetReward(y), GetReward(x))));
             }
+        }
+
+        private float GetReward(BestRecordInfo record) {
+            return record?.Reward ?? float.MinValue;
         }
 
         private void SaveAllRecordElement(AllGameRecordInfo allRecordElement) {

@@ -14,7 +14,7 @@ namespace Game.Scripts.Game.Gamemodes {
         private TaskModeController _taskModeController;
         private float _resultValue;
 
-        public TaskGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, GameService gameService, UIService uIService, SignalBus signalBus, TaskModeController taskModeController) : base(gameSettingsController, currenciesService, gameService, uIService, signalBus) {
+        public TaskGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, LevelService levelService, GameService gameService, UIService uIService, SignalBus signalBus, TaskModeController taskModeController) : base(gameSettingsController, currenciesService, levelService, gameService, uIService, signalBus) {
             _taskModeController = taskModeController;
         }
 

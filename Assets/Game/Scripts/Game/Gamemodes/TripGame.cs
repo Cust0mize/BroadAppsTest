@@ -10,7 +10,7 @@ namespace Game.Scripts.Game.Gamemodes {
         public float StartDownMultiplyValue;
         public float DownMultiplyValue;
 
-        public TripGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, GameService gameService, UIService uIService, SignalBus signalBus, RouteController routeController) : base(gameSettingsController, currenciesService, gameService, uIService, signalBus) {
+        public TripGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, LevelService levelService, GameService gameService, UIService uIService, SignalBus signalBus, RouteController routeController) : base(gameSettingsController, currenciesService, levelService, gameService, uIService, signalBus) {
             _routeController = routeController;
         }
 
@@ -37,7 +37,7 @@ namespace Game.Scripts.Game.Gamemodes {
         }
 
         public override void SetResult() {
-            if (CurrentMultiply > Multiply && DownMultiplyValue <= 0) {
+            if (IsAddValue && DownMultiplyValue <= 0) {
                 float rewardValue = Amount * CurrentMultiply;
                 SignalBus.Fire(new SignalWinGame(rewardValue, EndTime));
                 DownMultiplyValue = StartDownMultiplyValue;
@@ -45,14 +45,13 @@ namespace Game.Scripts.Game.Gamemodes {
         }
 
         public override void StopGame(SignalStopGame signalStopGame) {
-            base.StopGame(signalStopGame);
-
             if (signalStopGame.IsWin) {
                 SetResult();
             }
             else {
                 CurrenciesService.RemoveMoney(Amount);
             }
+            base.StopGame(signalStopGame);
         }
     }
 }

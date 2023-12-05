@@ -135,6 +135,8 @@ MonoBehaviour:
   _gameTimeTextUI: {fileID: 7207882129023738789}
   _balanceTextUI: {fileID: 4053096069342784972}
   _rewardTextUI: {fileID: 909422579284879808}
+  _goodColor: {r: 0.34509805, g: 0.78823537, b: 0.3372549, a: 1}
+  _badColor: {r: 0.82745105, g: 0.27450982, b: 0.27450982, a: 1}
 --- !u!1 &1083734919699812121
 GameObject:
   m_ObjectHideFlags: 0

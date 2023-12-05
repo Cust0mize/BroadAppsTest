@@ -5,6 +5,7 @@ using UnityEngine;
 using Zenject;
 using TMPro;
 using Enums;
+using Unity.Collections.LowLevel.Unsafe;
 
 namespace Game.Scripts.UI.Panels.Achivment {
     public class AchivmentItem : MonoBehaviour {

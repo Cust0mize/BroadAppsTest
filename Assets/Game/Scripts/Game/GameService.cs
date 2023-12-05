@@ -68,7 +68,6 @@ namespace Game.Scripts.Game {
             _currenciesService.AddMoney(signalWinGame.RewardValue);
             _signalBus.Fire(new SignalUpdateAchivment(AchivmentType.Earn, signalWinGame.RewardValue));
             _signalBus.Fire(new SignalUpdateAchivment(AchivmentType.Fly, signalWinGame.GameTime / 60));
-            _signalBus.Fire(new SignalSaveRecord(signalWinGame.GameTime, signalWinGame.RewardValue));
         }
 
         private void SetLoseChance() {

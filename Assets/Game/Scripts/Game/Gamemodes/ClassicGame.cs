@@ -5,7 +5,7 @@ using Enums;
 
 namespace Game.Scripts.Game.Gamemodes {
     public class ClassicGame : BaseGame {
-        public ClassicGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, GameService gameService, UIService uIService, SignalBus signalBus) : base(gameSettingsController, currenciesService, gameService, uIService, signalBus) {
+        public ClassicGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, LevelService levelService, GameService gameService, UIService uIService, SignalBus signalBus) : base(gameSettingsController, currenciesService, levelService, gameService, uIService, signalBus) {
         }
 
         public override Gamemode GameMode => Gamemode.Classic;
@@ -19,7 +19,7 @@ namespace Game.Scripts.Game.Gamemodes {
         }
 
         public override void SetResult() {
-            if (CurrentMultiply > Multiply) {
+            if (IsAddValue) {
                 float rewardValue = Amount * CurrentMultiply;
                 SignalBus.Fire(new SignalWinGame(rewardValue, EndTime));
             }

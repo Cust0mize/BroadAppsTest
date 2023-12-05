@@ -17,11 +17,12 @@ namespace Game.Scripts.UI.Panels {
         }
 
         public void UpdateStartValue(float newValue, float targetValue) {
+            newValue = Mathf.Abs(newValue);
             if (newValue > targetValue) {
                 newValue = targetValue;
             }
 
-            _startValueTextUI.text = $"{Mathf.Abs(newValue):f2}";
+            _startValueTextUI.text = $"{newValue:f2}";
         }
 
         public void SetCurrentValue(float currentValue) {
@@ -33,13 +34,15 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void SetStartValue(float newValue) {
+            newValue = Mathf.Abs(newValue);
             _startValue = newValue;
-            _startValueTextUI.text = $"{Mathf.Abs(_startValue):f2}";
+            _startValueTextUI.text = $"{_startValue:f2}";
         }
 
         private void SetEndValue(float newValue) {
+            newValue = Mathf.Abs(newValue);
             _endValue = newValue;
-            _endValueTextUI.text = $"{Mathf.Abs(_endValue):f2}";
+            _endValueTextUI.text = $"{_endValue:f2}";
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Game.Scripts.Game.Gamemodes {
     public class TwoPersonGame : BaseGame {
         private TwoPersonModeController _twoPersonModeController;
 
-        public TwoPersonGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, GameService gameService, UIService uIService, SignalBus signalBus, TwoPersonModeController twoPersonModeController) : base(gameSettingsController, currenciesService, gameService, uIService, signalBus) {
+        public TwoPersonGame(GameSettingsController gameSettingsController, CurrenciesService currenciesService, LevelService levelService, GameService gameService, UIService uIService, SignalBus signalBus, TwoPersonModeController twoPersonModeController) : base(gameSettingsController, currenciesService, levelService, gameService, uIService, signalBus) {
             _twoPersonModeController = twoPersonModeController;
         }
 

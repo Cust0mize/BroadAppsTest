@@ -12,6 +12,6 @@ public class SceneLoaderService {
 }
 
 public enum SceneName {
-    EntryPoint,
+    EntryPointStarter,
     Game
 }

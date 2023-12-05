@@ -12,10 +12,13 @@ namespace Game.Scripts.Game.Gamemodes {
         private GameService _gameService;
 
         protected CurrenciesService CurrenciesService { get; private set; }
+
+        private LevelService _levelService;
+
         protected UIService UIService { get; private set; }
         protected SignalBus SignalBus { get; }
         public float LooseValue => 0.95f;
-        protected float EndTime => StartTime - Time.time;
+        protected float EndTime => StartTimeGame - Time.time;
 
         public AnimationCurve MultiplyAnimationCurve { get; private set; }
         public float CurrentMultiply { get; private set; }
@@ -24,16 +27,19 @@ namespace Game.Scripts.Game.Gamemodes {
         public float StartTime { get; private set; }
         public float Multiply { get; private set; }
         public float Amount { get; private set; }
+        public bool IsAddValue => CurrentMultiply > Multiply;
 
         public BaseGame(
             GameSettingsController gameSettingsController,
             CurrenciesService currenciesService,
+            LevelService levelService,
             GameService gameService,
             UIService uIService,
             SignalBus signalBus
         ) {
             _gameSettingsController = gameSettingsController;
             CurrenciesService = currenciesService;
+            _levelService = levelService;
             _gameService = gameService;
             UIService = uIService;
             SignalBus = signalBus;
@@ -64,6 +70,17 @@ namespace Game.Scripts.Game.Gamemodes {
         public virtual void StopGame(SignalStopGame signalStopGame) {
             IsStartGame = false;
             UIService.GetPanel<GamePanel>().UpdateButtonState(GameButtonType.Bid);
+
+            if (signalStopGame.IsWin) {
+                if (IsAddValue) {
+                    SignalBus.Fire(new SignalSaveRecord(EndTime, Amount * CurrentMultiply));
+                    _levelService.AddLevelProgressValue(100);
+                }
+            }
+            else {
+                SignalBus.Fire(new SignalSaveRecord(EndTime, -Amount));
+                _levelService.AddLevelProgressValue(10);
+            }
         }
     }
 }

@@ -47,31 +47,11 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void SubscribeButtons() {
-            _customizationButton.RemoveAllAndSubscribeButton(CustomizationClick);
-            _achievementsButton.RemoveAllAndSubscribeButton(AchievementsClick);
-            _startGameButton.RemoveAllAndSubscribeButton(StartGameClick);
-            _recordButton.RemoveAllAndSubscribeButton(RecordClick);
-            _moreButton.RemoveAllAndSubscribeButton(MoreClick);
-        }
-
-        private void AchievementsClick() {
-            UIService.OpenPanel<AchivmentPanel>();
-        }
-
-        private void CustomizationClick() {
-            UIService.OpenPanel<CustomizationPanel>();
-        }
-
-        private void StartGameClick() {
-            UIService.OpenPanel<ChangeGameModePanel>();
-        }
-
-        private void RecordClick() {
-            UIService.OpenPanel<RecordPanel>();
-        }
-
-        private void MoreClick() {
-
+            _customizationButton.RemoveAllAndSubscribeButton(() => UIService.OpenPanel<CustomizationPanel>());
+            _startGameButton.RemoveAllAndSubscribeButton(() => UIService.OpenPanel<ChangeGameModePanel>());
+            _achievementsButton.RemoveAllAndSubscribeButton(() => UIService.OpenPanel<AchivmentPanel>());
+            _recordButton.RemoveAllAndSubscribeButton(() => UIService.OpenPanel<RecordPanel>());
+            _moreButton.RemoveAllAndSubscribeButton(() => UIService.OpenPanel<MorePanel>());
         }
     }
 }
