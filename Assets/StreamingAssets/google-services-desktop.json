@@ -1,0 +1,31 @@
+{
+  "project_info": {
+    "project_number": "517573719328",
+    "project_id": "aviator-635e8",
+    "storage_bucket": "aviator-635e8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517573719328:ios:835839a1eeea2577d4d345",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.BreadAppsTest"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "AIzaSyCT02J87mRcpjtIoHExVSxEEep6PNPQl3I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 0
+        },
+        "appinvite_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
