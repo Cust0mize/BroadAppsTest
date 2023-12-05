@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System;
 using TMPro;
+using Zenject;
+using Game.Scripts.Game;
 
 namespace Game.Scripts.UI.Panels {
     public class GameSettingsController : MonoBehaviour {
@@ -8,6 +10,12 @@ namespace Game.Scripts.UI.Panels {
         [SerializeField] private TMP_InputField _amountField;
         private Action<MultiplyButton> _multiplyButtonClick;
         MultiplyButton[] _multiplyButtons;
+        private CurrenciesService _currenciesService;
+
+        [Inject]
+        private void Construct(CurrenciesService currenciesService) {
+            _currenciesService = currenciesService;
+        }
 
         private void Start() {
             _multiplyButtons = transform.GetComponentsInChildren<MultiplyButton>();
@@ -44,6 +52,7 @@ namespace Game.Scripts.UI.Panels {
             multiply = parceMultiply < 1.5f ? 1.5f : parceMultiply;
             float.TryParse(_amountField.text, out float parceAmount);
             amount = parceAmount < 100 ? 100 : parceAmount;
+            amount = amount < _currenciesService.CurrentMoney ? amount : _currenciesService.CurrentMoney;
             UpdateField(multiply, amount);
         }
 
