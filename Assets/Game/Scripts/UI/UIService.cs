@@ -49,6 +49,11 @@ public class UIService : MonoBehaviour, ILoadableElement {
         _stack.RemoveAll(x => x == panel);
     }
 
+    public void HidePanelBypassStack(UIPanel uIPanel) {
+        uIPanel.Hide();
+        _stack.RemoveAll(x => x == uIPanel);
+    }
+
     public void OpenPanel<T>() where T : UIPanel {
         if (_stack.Count > 0) {
             if (_stack[_stack.Count - 1].GetType() == typeof(T)) {
@@ -82,6 +87,15 @@ public class UIService : MonoBehaviour, ILoadableElement {
 
     public bool IsAnyPanelOpened() {
         return _stack.Count > 0;
+    }
+
+    public UIPanel GetOpenPanel() {
+        if (IsAnyPanelOpened()) {
+            return _stack[_stack.Count - 1];
+        }
+        else {
+            return null;
+        }
     }
 
     public void ShowUIElements() {

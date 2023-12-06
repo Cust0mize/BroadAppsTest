@@ -17,6 +17,10 @@ public class EveryDayCounterService : ITickable {
         _signalBus.Subscribe<SignalGameIsLoad>(Init);
     }
 
+    private void Init() {
+        _gameIsLoad = true;
+    }
+
     public void Tick() {
         if (_gameIsLoad) {
             CheckReloadTime();
@@ -46,9 +50,5 @@ public class EveryDayCounterService : ITickable {
             _gameData.DayIndex++;
             _signalBus.Fire(new SignalNewDay());
         }
-    }
-
-    private void Init() {
-        _gameIsLoad = true;
     }
 }

@@ -1,13 +1,7 @@
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using Firebase.Installations;
 using Firebase.RemoteConfig;
-using Firebase.Extensions;
 using Game.Scripts.Signal;
-using UnityEngine;
-using Firebase;
-using Zenject;
 using System;
+using Zenject;
 
 public class OnBoardingPanel : UIPanel {
     private OnBoardingScreen[] _onBoardingScreen;
@@ -15,6 +9,7 @@ public class OnBoardingPanel : UIPanel {
     private long _onboardingIndex = 1;
 
     private GameData _gameData;
+    private SignalBus _signalBus;
 
     [Inject]
     private void Construct(
@@ -22,6 +17,7 @@ public class OnBoardingPanel : UIPanel {
         GameData gameData
     ) {
         _gameData = gameData;
+        _signalBus = signalBus;
         signalBus.Subscribe<SignalNextOnBoardingClick>(OnBoardingScreenUpdate);
     }
 
@@ -34,8 +30,8 @@ public class OnBoardingPanel : UIPanel {
         else {
             if (_onboardingIndex == 0) {
                 _gameData.IsShowOnboarding = false;
-                print("end");
             }
+            _signalBus.Fire(new SignalGameIsLoad());
         }
     }
 
@@ -51,43 +47,5 @@ public class OnBoardingPanel : UIPanel {
             _onBoardingScreen[_onboardingIndex].gameObject.SetActive(true);
             _onBoardingScreen[_onboardingIndex].SetActive(_currentScreenIndex, true);
         }
-    }
-}
-
-public static class RemoteConfig {
-    static DependencyStatus dependencyStatus = DependencyStatus.UnavailableOther;
-    public static bool IsInited { get; private set; } = false;
-
-    public static async UniTask Init() {
-        await FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(async task =>
-        {
-            dependencyStatus = task.Result;
-
-            if (dependencyStatus == DependencyStatus.Available) {
-                await InitializeFirebase();
-
-                await FirebaseInstallations.DefaultInstance.GetTokenAsync(forceRefresh: true).ContinueWith(task =>
-                {
-                    if (!(task.IsCanceled || task.IsFaulted) && task.IsCompleted) {
-                        Debug.Log(string.Format("THIS Installations token {0}", task.Result));
-                    }
-                });
-            }
-            else {
-                Debug.LogError(
-                  "Could not resolve all Firebase dependencies: " + dependencyStatus);
-            }
-        });
-    }
-
-    private async static UniTask InitializeFirebase() {
-        if (IsInited) return;
-        Dictionary<string, object> defaults =
-              new Dictionary<string, object>();
-
-        await FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(defaults);
-        await FirebaseRemoteConfig.DefaultInstance.FetchAsync(TimeSpan.Zero);
-        await FirebaseRemoteConfig.DefaultInstance.ActivateAsync();
-        IsInited = true;
     }
 }

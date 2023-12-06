@@ -1,7 +1,9 @@
+using Game.Scripts.Services;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine;
 using Zenject;
+using System;
 
 public class EntryPointStarter : MonoBehaviour {
     [SerializeField] private Image _loadImage;
