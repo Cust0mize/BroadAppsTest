@@ -1,6 +1,4 @@
-using Firebase.RemoteConfig;
 using Game.Scripts.Signal;
-using System;
 using Zenject;
 
 public class OnBoardingPanel : UIPanel {
@@ -8,14 +6,17 @@ public class OnBoardingPanel : UIPanel {
     private int _currentScreenIndex;
     private long _onboardingIndex = 1;
 
-    private GameData _gameData;
+    private BackendService _backendService;
     private SignalBus _signalBus;
+    private GameData _gameData;
 
     [Inject]
     private void Construct(
+        BackendService backendService,
         SignalBus signalBus,
         GameData gameData
     ) {
+        _backendService = backendService;
         _gameData = gameData;
         _signalBus = signalBus;
         signalBus.Subscribe<SignalNextOnBoardingClick>(OnBoardingScreenUpdate);
@@ -37,7 +38,10 @@ public class OnBoardingPanel : UIPanel {
 
     private void Start() {
         if (_gameData.IsShowOnboarding) {
-            _onboardingIndex = FirebaseRemoteConfig.DefaultInstance.GetValue("_isReview").LongValue;
+            //_onboardingIndex = FirebaseRemoteConfig.DefaultInstance.GetValue("_isReview").LongValue;            
+            _onboardingIndex = _backendService.ZeroOneValue;
+            print(_onboardingIndex);
+
             _onBoardingScreen = transform.GetComponentsInChildren<OnBoardingScreen>(true);
 
             for (int i = 0; i < _onBoardingScreen.Length; i++) {
