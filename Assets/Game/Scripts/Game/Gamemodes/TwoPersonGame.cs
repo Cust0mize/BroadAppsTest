@@ -34,6 +34,7 @@ namespace Game.Scripts.Game.Gamemodes {
             if (CurrentPlayerIndex != PlayerCount) {
                 CurrentPlayerIndex++;
                 CurrentTimeSpan = StartTimeSpan;
+                SignalBus.Fire(new SignalPlayerLableUpdate(_twoPersonModeController.SecondPersonName, CurrentPlayerIndex));
             }
         }
 

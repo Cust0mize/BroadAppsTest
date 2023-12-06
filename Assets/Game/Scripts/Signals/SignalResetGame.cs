@@ -43,8 +43,8 @@ namespace Game.Scripts.Signal {
     }
 
     public struct SignalLooseGame {
-    }   
-    
+    }
+
     public struct SignalNewDay {
     }    
 
@@ -150,6 +150,16 @@ namespace Game.Scripts.Signal {
         public SignalSaveRecord(float gameTime, float reward) {
             GameTime = gameTime;
             Reward = reward;
+        }
+    }
+
+    public struct SignalPlayerLableUpdate {
+        public string PlayerName;
+        public int PlayerIndex;
+
+        public SignalPlayerLableUpdate(string playerName, int playerIndex) {
+            PlayerIndex = playerIndex;
+            PlayerName = playerName;
         }
     }
 }
