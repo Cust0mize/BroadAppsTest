@@ -11,7 +11,6 @@ public class ProjectInstaller : MonoInstaller {
         Container.Bind<WindowShowHideAnimation>().AsSingle().NonLazy();
         Container.Bind<ResourceLoaderService>().AsSingle().NonLazy();
         Container.Bind<SceneLoaderService>().AsSingle().NonLazy();
-        Container.Bind<BackendService>().AsSingle().NonLazy();
         Container.Bind<ConfigService>().AsSingle().NonLazy();
         Container.Bind<SaveSystem>().AsSingle().NonLazy();
         Container.Bind<GameData>().AsSingle().NonLazy();
