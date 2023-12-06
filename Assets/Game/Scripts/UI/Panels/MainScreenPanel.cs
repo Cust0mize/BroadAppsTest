@@ -1,11 +1,11 @@
 using Game.Scripts.UI.Panels.Customization;
 using Game.Scripts.UI.Panels.Achivment;
+using Game.Scripts.UI.Panels.Record;
 using Game.Scripts.Signal;
 using UnityEngine.UI;
 using UnityEngine;
 using Zenject;
 using TMPro;
-using Game.Scripts.UI.Panels.Record;
 
 namespace Game.Scripts.UI.Panels {
     public class MainScreenPanel : UIPanel, ILoadableElement {
@@ -43,7 +43,7 @@ namespace Game.Scripts.UI.Panels {
         }
 
         private void BalanceUpdate(SignalMoneyUpdate signalMoneyUpdate) {
-            _balanceValueTextUI.text = signalMoneyUpdate.NewMoneyValue.ToString();
+            _balanceValueTextUI.text = $"${signalMoneyUpdate.NewMoneyValue:f2}";
         }
 
         private void SubscribeButtons() {

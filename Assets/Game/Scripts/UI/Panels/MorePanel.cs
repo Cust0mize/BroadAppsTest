@@ -14,9 +14,9 @@ namespace Game.Scripts.UI.Panels {
 
         private void Start() {
             _changeTheBalanceButton.RemoveAllAndSubscribeButton(() => UIService.OpenPanel<ConfirmRemoveBalancePanel>());
-            _shareButton.RemoveAllAndSubscribeButton(() => Application.OpenURL(_shareURL));
-            _usageButton.RemoveAllAndSubscribeButton(() => Application.OpenURL(_usageURL));
-            _rateButton.RemoveAllAndSubscribeButton(() => Application.OpenURL(_rateURL));
+            //_shareButton.RemoveAllAndSubscribeButton(() => Application.OpenURL(_shareURL));
+            //_usageButton.RemoveAllAndSubscribeButton(() => Application.OpenURL(_usageURL));
+            //_rateButton.RemoveAllAndSubscribeButton(() => Application.OpenURL(_rateURL));
         }
     }
 }

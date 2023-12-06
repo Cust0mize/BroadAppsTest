@@ -11,6 +11,7 @@ public class ProjectInstaller : MonoInstaller {
         Container.Bind<WindowShowHideAnimation>().AsSingle().NonLazy();
         Container.Bind<ResourceLoaderService>().AsSingle().NonLazy();
         Container.Bind<SceneLoaderService>().AsSingle().NonLazy();
+        Container.Bind<BackendService>().AsSingle().NonLazy();
         Container.Bind<ConfigService>().AsSingle().NonLazy();
         Container.Bind<SaveSystem>().AsSingle().NonLazy();
         Container.Bind<GameData>().AsSingle().NonLazy();
@@ -28,6 +29,7 @@ public class ProjectInstaller : MonoInstaller {
         Container.DeclareSignal<SignalDownMultipleUpdate>().OptionalSubscriber();
         Container.DeclareSignal<SignalStartTaskModeGame>().OptionalSubscriber();
         Container.DeclareSignal<SignalStartTaskModeGame>().OptionalSubscriber();
+        Container.DeclareSignal<SignalPlayerLableUpdate>().OptionalSubscriber();
         Container.DeclareSignal<SignalUpdateAchivment>().OptionalSubscriber();
         Container.DeclareSignal<SignalUpdateAirplane>().OptionalSubscriber();
         Container.DeclareSignal<SignalBuyNewElemetn>().OptionalSubscriber();

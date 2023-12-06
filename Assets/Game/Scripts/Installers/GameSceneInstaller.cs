@@ -26,22 +26,9 @@ public class GameSceneInstaller : MonoInstaller {
     }
 
     private void GameBinds() {
-        //Container.Bind<TwoPersonGame>().AsCached().NonLazy();
-        //Container.Bind<ClassicGame>().AsCached().NonLazy();
-        //Container.Bind<TripGame>().AsCached().NonLazy();
-        //Container.Bind<TaskGame>().AsCached().NonLazy();
-
         Container.Bind<BaseGame>().To<TwoPersonGame>().AsCached().NonLazy();
         Container.Bind<BaseGame>().To<ClassicGame>().AsCached().NonLazy();
         Container.Bind<BaseGame>().To<TripGame>().AsCached().NonLazy();
         Container.Bind<BaseGame>().To<TaskGame>().AsCached().NonLazy();
-
-        //var games = new List<BaseGame> {
-        //    Container.Resolve<TwoPersonGame>(),
-        //    Container.Resolve<ClassicGame>(),
-        //    Container.Resolve<TripGame>(),
-        //    Container.Resolve<TaskGame>()
-        //};
-        //Container.BindInstance(games).AsCached().NonLazy();
     }
 }

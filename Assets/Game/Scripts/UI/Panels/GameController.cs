@@ -38,7 +38,9 @@ namespace Game.Scripts.UI.Panels {
             _twoPersonModeController = twoPersonModeController;
             _routeController = routeController;
             _gameData = gameData;
+
             signalBus.Subscribe<SignalDownMultipleUpdate>(DownMultipleUpdate);
+            signalBus.Subscribe<SignalPlayerLableUpdate>(PlayerNameUpdate);
             signalBus.Subscribe<OpenGamePanel>(OpenGameWindow);
             signalBus.Subscribe<SignalStartGame>(StartGame);
             signalBus.Subscribe<SignalStopGame>(StopGame);
@@ -70,7 +72,10 @@ namespace Game.Scripts.UI.Panels {
             _baseGame.StopGame(signalStopGame);
             _player.UpdatePosition(0.1f);
             SetMultipleTextState(false);
-            _playerNameTextUI.text = $"Player {2}\n{_twoPersonModeController.SecondPersonName}";
+        }
+
+        private void PlayerNameUpdate(SignalPlayerLableUpdate signalPlayerLableUpdate) {
+            _playerNameTextUI.text = $"Player {signalPlayerLableUpdate.PlayerIndex}\n{signalPlayerLableUpdate.PlayerName}";
         }
 
         private void UIUpdate() {
@@ -115,3 +120,4 @@ namespace Game.Scripts.UI.Panels {
         }
     }
 }
+
