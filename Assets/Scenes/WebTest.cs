@@ -6,7 +6,7 @@ public class WebTest : MonoBehaviour {
     // FullScreen
     public void ShowUrlFullScreen(string Url) {
         GpmWebView.ShowUrl(
-            "Url",
+            Url,
             new GpmWebViewRequest.Configuration() {
                 style = GpmWebViewStyle.FULLSCREEN,
                 orientation = GpmOrientation.UNSPECIFIED,

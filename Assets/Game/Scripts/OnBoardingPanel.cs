@@ -1,8 +1,11 @@
+using Firebase.RemoteConfig;
 using Game.Scripts.Signal;
+using UnityEngine;
 using Zenject;
 
 public class OnBoardingPanel : UIPanel {
     private OnBoardingScreen[] _onBoardingScreen;
+    [SerializeField] WebTest _webTest;
     private int _currentScreenIndex;
     private long _onboardingIndex = 1;
 
@@ -37,19 +40,35 @@ public class OnBoardingPanel : UIPanel {
     }
 
     private void Start() {
-        if (_gameData.IsShowOnboarding) {
-            //_onboardingIndex = FirebaseRemoteConfig.DefaultInstance.GetValue("_isReview").LongValue;            
-            _onboardingIndex = _backendService.ZeroOneValue;
-            print(_onboardingIndex);
+        if (FirebaseRemoteConfig.DefaultInstance.GetValue("_isShowOnboarding").BooleanValue) {
+            if (_gameData.IsShowOnboarding) {
+                string webURL = FirebaseRemoteConfig.DefaultInstance.GetValue("_webVieURL").StringValue;
+                _onboardingIndex = _backendService.ZeroOneValue;
 
-            _onBoardingScreen = transform.GetComponentsInChildren<OnBoardingScreen>(true);
-
-            for (int i = 0; i < _onBoardingScreen.Length; i++) {
-                _onBoardingScreen[i].Init();
-                _onBoardingScreen[i].gameObject.SetActive(false);
+                if (_onboardingIndex == 1) {
+                    ShowCap();
+                }
+                else {
+                    if (string.IsNullOrEmpty(webURL)) {
+                        ShowCap();
+                    }
+                    else {
+                        _webTest.ShowUrlFullScreen(webURL);
+                        _gameData.IsShowOnboarding = false;
+                    }
+                }
             }
-            _onBoardingScreen[_onboardingIndex].gameObject.SetActive(true);
-            _onBoardingScreen[_onboardingIndex].SetActive(_currentScreenIndex, true);
         }
+    }
+
+    private void ShowCap() {
+        print(_onboardingIndex);
+        _onBoardingScreen = transform.GetComponentsInChildren<OnBoardingScreen>(true);
+        for (int i = 0; i < _onBoardingScreen.Length; i++) {
+            _onBoardingScreen[i].Init();
+            _onBoardingScreen[i].gameObject.SetActive(false);
+        }
+        _onBoardingScreen[_onboardingIndex].gameObject.SetActive(true);
+        _onBoardingScreen[_onboardingIndex].SetActive(_currentScreenIndex, true);
     }
 }
