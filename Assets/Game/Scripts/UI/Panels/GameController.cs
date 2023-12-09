@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Game.Scripts.Signal;
 using Game.Scripts.Game;
-using System.Linq;
 using UnityEngine;
 using Zenject;
 using TMPro;
@@ -23,7 +22,7 @@ namespace Game.Scripts.UI.Panels {
         private TwoPersonModeController _twoPersonModeController;
         private RouteController _routeController;
 
-        private IEnumerable<BaseGame> _allGames;
+        private Dictionary<Gamemode, BaseGame> _allGames = new();
         private GameData _gameData;
         private BaseGame _baseGame;
 
@@ -45,7 +44,9 @@ namespace Game.Scripts.UI.Panels {
             signalBus.Subscribe<SignalStartGame>(StartGame);
             signalBus.Subscribe<SignalStopGame>(StopGame);
 
-            _allGames = _baseGames;
+            foreach (var item in _baseGames) {
+                _allGames.Add(item.GameMode, item);
+            }
         }
 
         private void Start() {
@@ -92,7 +93,8 @@ namespace Game.Scripts.UI.Panels {
         private void OpenGameWindow() {
             UpdateUI();
             SetStateUI(_gameData.CurrentGamemode);
-            _baseGame = _allGames.FirstOrDefault(x => x.GameMode == _gameData.CurrentGamemode);
+            _allGames.TryGetValue(_gameData.CurrentGamemode, out BaseGame baseGame);
+            _baseGame = baseGame;
             _baseGame.SetStartValue();
         }
 
