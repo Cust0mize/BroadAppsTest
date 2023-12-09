@@ -39,7 +39,7 @@ public class EntryPointStarter : MonoBehaviour {
         });
 
         await RemoteConfig.Init();
-        //await _backendService.LoadValueFromServer();
+        await _backendService.LoadValueFromServer();
 
         _gameData.Init(_saveSystem);
         _gameData.SetValue(_saveSystem.LoadFromDevice());
